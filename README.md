@@ -1,6 +1,6 @@
-# mboxeditor v3
+# mboxeditor v4 — recessed interlocking seams
 
-Browser-only multi-miniature editor: local Three.js, JSCAD CSG, binary STL and ZIP/BOM export. Exactly **body + lid per unit**, no separate keys, pins or hardware. Mechanical geometry independently developed; earlier Gemini consultation concerned only general software architecture (`docs/gemini-design.txt`).
+Browser-only multi-miniature editor: Three.js, JSCAD CSG, STL and ZIP/BOM. Exactly **body + lid per unit**, no pins, keys or loose hardware. Multi-model capacity, per-type heights, optional base pockets, ribs and complete model envelopes remain. Gemini provenance is restricted to the software architecture (`docs/gemini-design.txt`); mechanics are independently developed.
 
 ## Run
 
@@ -12,62 +12,54 @@ npm run dev
 npm run test:browser
 ```
 
-Chrome tests use installed macOS Chrome and localhost:4173. `dist/.git` is a separate gh-pages repository, preserved by build. Build/test does not publish.
+Browser tests require local Chrome and localhost:4173. Build preserves the separate `dist/.git` gh-pages repository; these commands do not publish.
 
-## Capacity and print limits
+## Recessed seam: actual motion and solid mating
 
-Enter full model W/D/H including weapons. Quantity is models; models/unit is target capacity. Columns 0=auto; rows and overflow units are automatic. Partial units shrink. Minimum spacing 2 mm, wall/floor 2.4 mm, independent height model H+8.4 (minimum26). Optional shallow square base pockets organize, not immobilize. Low integral ribs separate envelopes. No scaling. Maximum40 units, 200 models/type.
+Two rigid closed flush walls cannot contain an engaging connector without overlap or motion. This design uses **overlapping edge reservations and vertical sliding**, not cosmetic hidden ports. Define each unit's nominal rectangular envelope as `[0,W]×[0,D]`; W/D = `16n+8`, n≥2. Neighbour origins advance **W−8 / D−8**. The reservations overlap 8 mm, but the actual solids do not. The previous 8 mm inter-box stand-off is removed.
 
-Shell W/D are rounded UP to `16n−8`, n≥2, so all edge port datums align. A single32 mm miniature has40×40 shell and51.8×51.8 actual body including protrusions (under60); smallest shell24×24, two ports/edge. Default five32 mm models occupy104×72 shell. Every part is checked against250×250×250 INCLUDING all integral features; oversized models are rejected, not scaled. Current maximum shell232 mm; maximum model W/D227.2 before capacity rounding. Height allowance includes seats/keys. Overall assembly may exceed250.
+The load-bearing outer wall butt datum is 4 mm inside the nominal rectangle, with c/2 relief on both butting walls (total c=.15… .60 mm). This is a narrow fit seam, not an 8 mm gap. Male neck runs from W−4.3 to W−4; trapezoid widens from 2.8 to 5.6 mm across a 4 mm axial run. Its tip is at W, **never outside the nominal rectangular envelope**. Female cuts use the complementary profile expanded by c, at X=4…8 relative to the neighbour. Tangential centres are **13+16k**, k=0…n−1. The 13 mm datum deliberately avoids crossing the perpendicular corner ports and stack seats even at .60 mm clearance. Every side has at least two actual ports.
 
-## Standardized integral interfaces
+LEFT/FRONT are female, RIGHT/BACK male. No alternating rotation or universal-gender adjacency. Both tongue and channel run the complete body height, with no socket ceiling, bridge or vertical stop. Lower bodies into the common seam before fitting lids. Simultaneous X/Y lowering into a two-neighbour grid corner is collision-tested over the whole body height. A vertical slide is necessary; do not press horizontally or claim enclosed fixed faces engage without motion. Unused edge profiles are visible at free boundaries; no enclosing cosmetic cover is supplied or implied.
 
-```
-                        BACK (+Y): male ports
-                       ┌──────────────────┐
- LEFT (−X): female ←   │        BODY      │   → RIGHT (+X): male
-                       └──────────────────┘
-                        FRONT (−Y): female ports
+The cavity starts **10.4 mm inside the nominal rectangle**, beyond both seam bands. Floor stays 2.4 mm and is closed under every model; grooves never enter the cavity. Shared seams do not intersect model envelopes, floor interior, lids or perpendicular corner ports. The actual straight wall between cavity and butt datum is approximately 6.4−c/2 mm, less at female pockets; tongue cantilever length is 4 mm. This shortens the load arm and supports the mating profile within a thickened wall zone. **It is not a measured strength improvement.**
 
- Z: upper floor + pyramid recesses
-              ↓ four aligned corners
-    lower wall-top seats + integral pyramid keys
-    lid has four clearance notches (not the stack load path)
-```
+## Dimensions / capacity cost
 
-XY port pitch16 mm; tangential centres `4+16k`, k=0…n−1. Shell dimensions+8 are exact pitch multiples. Each of all four edges has n≥2 ports; aligned different-size edges engage **min(nA,nB)** ports. Neighbour origins X=W+8 or Y=D+8. No alternating rotations: front/left female, back/right male. This is keyed, not fully arbitrary adjacency.
+Full model W/D/H includes weapons; no scaling. Model spacing ≥2 mm. Rows/overflow units are automatic; partial units shrink. Max40 units, 200 models/type. Height = model H+8.4, minimum26. All exported parts, not only nominal shells, must fit250×250×250.
 
-Male Z0…7, neck2.8 mm wide, trapezoid head5.6 mm wide, protrusion4 mm. Female Z0…8, housing protrudes7.8 mm and is8 mm wide, channel open THROUGH Z; profile expanded by c=0.15…0.60 mm in axial/tangential directions. Shell-to-shell gap8 mm leaves0.2 mm housing-to-opposite-wall clearance. No ceiling, bridge or closed socket roof. Female geometry is unioned into the body, not separate hardware.
+At c=.30:
 
-Lower a male-bearing unit into the neighbour's open channel **before fitting lids**. Rigid lower/raise path is sampled in CAD for both X/Y and simultaneous two-neighbour corners. Trapezoids capture horizontal separation; channels have **no vertical floor stop or lock**. All units must rest on a common flat supporting surface.
+| Configuration | Nominal envelope W×D×H | Actual body STL bounds | Lid STL bounds |
+|---|---|---|---|
+| Single32×32×48 miniature |56×56×56.4|51.85×51.85×60.35|47.4×47.4×16.7|
+| Five32×32×48, 3 columns |136×88×56.4|131.85×83.85×60.35|127.4×79.4×16.7|
+| Single65×65×82 |88×88×90.4|83.85×83.85×94.35|79.4×79.4×16.7|
+| Minimum5 mm model |40×40×26|35.85×35.85×29.95|31.4×31.4×16.7|
+| Maximum test227×227×237 |248×248×245.4|243.85×243.85×249.35|239.4×239.4×16.7|
 
-### Up/down stack
+These are nominal reservations versus tight physical STL bounds, not interchangeable dimensions. A32 mm unit has a48 mm origin pitch, three ports/edge, and remains below70 mm. The thick seam band costs16 mm extra total cavity margin compared with v3; quantization can add another pitch. Maximum unscaled single-model W/D is227.2 mm. Default five-model + Dreadnought reservations assemble to216×88×94.35 mm. Settings/UI dimensions describe the nominal assembly reservation; actual material begins inside unused perimeter rebates.
 
-Four2.4×2.4 wall-top corner seats extend toH+3.4; the upper floor sits there,0.7 mm above lower lid roof. Each seat carries an integral square pyramid,1 mm base width,0.55 mm tall (47.7° slope). The upper underside has matching upward-closing pyramid recesses expanded by c, bottom datum−0.01. Corner coordinates(1.2,1.2), (W−1.2,1.2), (1.2,D−1.2), (W−1.2,D−1.2). This locates XY, **does not latch Z**. Seat areas outside recesses carry weight directly into aligned body walls, not a hollow lid roof or thin lid cantilever.
+## Vertical interfaces and internal lid retention
 
-Stack pitchH+3.4. Same-footprint stacking only. Viewer additionally requires identical heights to avoid pretending mixed-height layers have a common bearing plane. No vertical capture; never lift the kit by its upper unit. Physical fit, friction and stack stability require printing.
+Four2.4×2.4 wall-top corner seats at (6,6), (W−6,6), (6,D−6), (W−6,D−6) rise to H+3.4. Each has a1 mm-wide, .55 mm-tall square pyramid (47.7° slope) and matching underside recess. Seats carry stack loads into walls, not the lid roof. Stack pitch **H+3.4**; upper floor sits .7 mm above lid roof. Stack preview requires identical footprint/height; keys locate XY but do not latch Z.
 
-### Lid retained
+The broad **lift-on lid retains positive integrated hooks**, moved inside the RIGHT/BACK (male) wall bands rather than exterior skirts. Two leaves are 18–24 mm wide, 1.2 mm thick and 14 mm free length. Their inward triangular hooks reach 10 mm inboard, behind the 10.4 mm cavity datum; sloped wall pockets provide clearance in the locked pose and vertical geometric capture. Female FRONT/LEFT bands were deliberately avoided: outward release there would intersect female connector channels. Nominal manual retraction is **1.4 mm outward into the male wall band**, not into stored miniature envelopes or adjacent units.
 
-Lift-on roof with broad manually spread front/back skirts, up to32 mm wide and1.6 mm thick,14 mm drop. The main shape and thumb-spread interaction remain; only45° triangular hook/receiving-pocket roofs and four corner pass-through notches replace unsupported ceilings. Plate H+0.3…H+2.7, inner locating lips remain. Spread BOTH skirts about1.5 mm, lower/lift, then release. Do not force an unflexed lid. Rigid released paths tested; elastic forces, stress, fatigue and automatic snap-in are NOT established.
+Insert fingers through the two **18×14.1 mm lid-top apertures**, press the RIGHT and BACK leaves outward, hold while lowering/lifting, then release to latch. No external-wall access is needed between joined lids. Remove upper stacked bodies first. Finger access is above model tops. Lid roof remains H+.3 to H+2.7; overall lid print height is now **16.7 mm**, not 4.7 mm. Both parts stay single connected solids with no loose bits. Hooks establish CAD retention, not validated snap action or transport/inversion certification.
 
-## Print WITHOUT support material — geometry target, not physical certification
+**Release verification limitation:** collision tests sample root-pivot leaf rotation through the release sweep and subsequent vertical removal, plus a translated free-leaf envelope. They do not simulate continuous elastic deformation, root strain, release force, fatigue or actual finger compliance. The recess extends to 5.1 mm inboard, leaving only about .8–1.0 mm of local outer wall at the pocket; this needs print/strength testing. The short 14 mm leaf requires physical flex testing; do not batch-print or claim a safe transport latch until this is verified. Top apertures are open (not dust-tight).
 
-- Body exports base down. Lid exports automatically **top-face DOWN** (180° X rotation then bed rebase). Do not reverse this orientation.
-- Body XY channels open through their complete height. Hook and wall pocket roofs45°; underside stack recesses47.7°; no intentional bridge allowance. All other downward surfaces lie on the bed in nominated orientation.
-- Tests inspect actual print-oriented triangles across minimum/multi/max envelopes and c=.15/.30/.60: no elevated downward-facing surface steeper than45° overhang. The only exemption is actual bed contact, not a feature-name ignore list; normal comparison includes a small numerical tolerance for JSCAD snapping.
-- PETG,0.4 nozzle,0.2 mm layers are starting suggestions. Slicer preview and a **full body/lid calibration pair** are required before batching. No physical printer was run; adhesion, cooling, dimensional fit and unsupported-layer quality remain unvalidated. If your slicer requires support, do not quietly print with it and call this validated.
+## Preview / export
 
-## Preview / exports
+Row/grid origins use the overlap pitch, including mixed unit dimensions. Some mixed grid neighbours have no common seam because larger row/column allocations leave space: **only settings.joints indicates real engagement**. Joint counts are actual common ports, verified independently by solid capture probes; diagonal reservation overlap is not a joint. Model ghosts and both part instances use actual XYZ poses.
 
-Row demonstrates X, grid columns demonstrate X/Y, stack layers demonstrate Z. Ghosts and both part instances use real XYZ poses. Grid has fixed common column origins and row origins on16 mm lattice. Mixed footprints may leave gaps: **only `settings.json → joints` entries are actually engaged**, not every visual neighbour. Do not claim a gap is joined. Stack mode rejects unequal footprint/height rather than showing unsupported boxes.
+ZIP contains body/lid STL files, BOM quantities (two parts/unit), CSV, posed settings and assembly instructions. No small loose parts. Body base down, lid automatically top-face down. Export tessellation welds sub-micron CSG duplicates, splits shared T-junction edges, then centroid-triangulates convex polygons; strict STL edge closure/winding/component audits remain unchanged.
 
-ZIP contains unique body/lid STLs with BOM quantities, BOM CSV/JSON, complete posed settings and assembly instructions. No calibration hardware or small loose connector files. STL normals are populated.
+## Verification / limitations
 
-## Verification and limitations
+`npm test` covers full model envelopes; min/max/mixed capacity; all four mating faces; independent capture of every counted port; X/Y clearances .15/.30/.60; full-height simultaneous corner insertion; no final body/lid/neighbour solid collision; stack lowering, registration and wall seat stops; lid installation; rectangle containment of every actual triangle; closed cavity floor; actual ZIP STL manifold edges/opposite winding/single connected component/positive volume/bounds. The actual print-frame triangle-normal slope test is unchanged: only real bed-contact surfaces are exempt from the45° limit, with no feature whitelist or bridge allowance.
 
-`npm test`: exact quantities, compact/overflow units, envelope clearance, true exported STL closure/opposite edge winding/single connected component/positive volume/bounds, rigid final collisions, X/Y capture and lower-in paths including grid corner, four-key stack clearance/seat-stop/lateral capture, lid released path, print-oriented slope audit at .15/.30/.60. This is geometric verification, not physical strength certification.
+`npm run test:browser` runs actual local Chrome desktop/mobile, editing, persistence, ghosts, real grid/stack poses, incompatible-stack rejection, real downloaded ZIP/BOM/STL audit,250 mm rejection and page errors. Ignored artifacts: `test-results/`.
 
-`npm run test:browser`: actual local Chrome desktop/mobile, ghost counts, editing, persistence, grid Y poses, stack Z poses, incompatible-stack rejection, actual downloaded ZIP/BOM/STL audit, oversize rejection and page errors. Artifacts in ignored `test-results/`.
-
-**Unprinted prototype.** No load rating, no inversion/shock safety, no validated handle. Carry upright with **two hands supporting ALL bases**. Never lift by lid, upper unit, end unit or connector. Low ribs/pockets do not clamp fragile miniatures. Creep, layer adhesion, skirt fatigue and thermal performance untested.
+**Unprinted prototype.** Geometry checks do not certify support-free printing or strength. No physical print, stress, fatigue, layer adhesion, impact, creep, friction or carrying test. PETG/.4 nozzle/.2 layers are starting suggestions only; inspect slicer and print a full pair before batching. No inter-box Z latch, inversion safety or handle. Carry upright with **two hands supporting ALL bases**; never lift by lid, connector, end unit or upper unit.
