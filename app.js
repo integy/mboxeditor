@@ -6002,7 +6002,7 @@ var require_interpolateBetween2DPointsForY = __commonJS({
 // node_modules/@jscad/modeling/src/maths/utils/intersect.js
 var require_intersect = __commonJS({
   "node_modules/@jscad/modeling/src/maths/utils/intersect.js"(exports, module) {
-    var intersect = (p1, p2, p3, p4) => {
+    var intersect2 = (p1, p2, p3, p4) => {
       if (p1[0] === p2[0] && p1[1] === p2[1] || p3[0] === p4[0] && p3[1] === p4[1]) {
         return void 0;
       }
@@ -6019,7 +6019,7 @@ var require_intersect = __commonJS({
       const y = p1[1] + ua * (p2[1] - p1[1]);
       return [x, y];
     };
-    module.exports = intersect;
+    module.exports = intersect2;
   }
 });
 
@@ -10893,7 +10893,7 @@ var require_intersectGeom3 = __commonJS({
     var flatten2 = require_flatten();
     var retessellate = require_retessellate();
     var intersectSub = require_intersectGeom3Sub();
-    var intersect = (...geometries) => {
+    var intersect2 = (...geometries) => {
       geometries = flatten2(geometries);
       let newgeometry = geometries.shift();
       geometries.forEach((geometry) => {
@@ -10902,7 +10902,7 @@ var require_intersectGeom3 = __commonJS({
       newgeometry = retessellate(newgeometry);
       return newgeometry;
     };
-    module.exports = intersect;
+    module.exports = intersect2;
   }
 });
 
@@ -10915,14 +10915,14 @@ var require_intersectGeom2 = __commonJS({
     var fromFakePolygons = require_fromFakePolygons();
     var to3DWalls = require_to3DWalls();
     var intersectGeom3 = require_intersectGeom3();
-    var intersect = (...geometries) => {
+    var intersect2 = (...geometries) => {
       geometries = flatten2(geometries);
       const newgeometries = geometries.map((geometry) => to3DWalls({ z0: -1, z1: 1 }, geometry));
       const newgeom3 = intersectGeom3(newgeometries);
       const epsilon = measureEpsilon(newgeom3);
       return fromFakePolygons(epsilon, geom3.toPolygons(newgeom3));
     };
-    module.exports = intersect;
+    module.exports = intersect2;
   }
 });
 
@@ -10935,7 +10935,7 @@ var require_intersect2 = __commonJS({
     var geom3 = require_geom3();
     var intersectGeom2 = require_intersectGeom2();
     var intersectGeom3 = require_intersectGeom3();
-    var intersect = (...geometries) => {
+    var intersect2 = (...geometries) => {
       geometries = flatten2(geometries);
       if (geometries.length === 0) throw new Error("wrong number of arguments");
       if (!areAllShapesTheSameType(geometries)) {
@@ -10946,7 +10946,7 @@ var require_intersect2 = __commonJS({
       if (geom3.isA(geometry)) return intersectGeom3(geometries);
       return geometry;
     };
-    module.exports = intersect;
+    module.exports = intersect2;
   }
 });
 
@@ -11388,7 +11388,7 @@ var require_booleans = __commonJS({
 var require_offsetFromPoints = __commonJS({
   "node_modules/@jscad/modeling/src/operations/expansions/offsetFromPoints.js"(exports, module) {
     var { EPS, TAU } = require_constants();
-    var intersect = require_intersect();
+    var intersect2 = require_intersect();
     var line2 = require_line2();
     var vec2 = require_vec2();
     var area = require_area();
@@ -11423,7 +11423,7 @@ var require_offsetFromPoints = __commonJS({
         const currentSegment = [n0, n1];
         if (previousSegment != null) {
           if (closed || !closed && j !== 0) {
-            const ip = intersect(previousSegment[0], previousSegment[1], currentSegment[0], currentSegment[1]);
+            const ip = intersect2(previousSegment[0], previousSegment[1], currentSegment[0], currentSegment[1]);
             if (ip) {
               newPoints.pop();
               currentSegment[0] = ip;
@@ -11440,7 +11440,7 @@ var require_offsetFromPoints = __commonJS({
       if (closed && previousSegment != null) {
         const n0 = newPoints[0];
         const n1 = newPoints[1];
-        const ip = intersect(previousSegment[0], previousSegment[1], n0, n1);
+        const ip = intersect2(previousSegment[0], previousSegment[1], n0, n1);
         if (ip) {
           newPoints[0] = ip;
           newPoints.pop();
@@ -24811,13 +24811,13 @@ var Mesh = class extends Object3D {
   }
 };
 function checkIntersection$1(object, material, raycaster, ray, pA, pB, pC, point) {
-  let intersect;
+  let intersect2;
   if (material.side === BackSide) {
-    intersect = ray.intersectTriangle(pC, pB, pA, true, point);
+    intersect2 = ray.intersectTriangle(pC, pB, pA, true, point);
   } else {
-    intersect = ray.intersectTriangle(pA, pB, pC, material.side === FrontSide, point);
+    intersect2 = ray.intersectTriangle(pA, pB, pC, material.side === FrontSide, point);
   }
-  if (intersect === null) return null;
+  if (intersect2 === null) return null;
   _intersectionPointWorld.copy(point);
   _intersectionPointWorld.applyMatrix4(object.matrixWorld);
   const distance = raycaster.ray.origin.distanceTo(_intersectionPointWorld);
@@ -26597,12 +26597,12 @@ var Sprite = class extends Object3D {
     _uvA.set(0, 0);
     _uvB.set(1, 0);
     _uvC.set(1, 1);
-    let intersect = raycaster.ray.intersectTriangle(_vA, _vB, _vC, false, _intersectPoint);
-    if (intersect === null) {
+    let intersect2 = raycaster.ray.intersectTriangle(_vA, _vB, _vC, false, _intersectPoint);
+    if (intersect2 === null) {
       transformVertex(_vB.set(-0.5, 0.5, 0), _mvPosition, center, _worldScale, sin, cos);
       _uvB.set(0, 1);
-      intersect = raycaster.ray.intersectTriangle(_vA, _vC, _vB, false, _intersectPoint);
-      if (intersect === null) {
+      intersect2 = raycaster.ray.intersectTriangle(_vA, _vC, _vB, false, _intersectPoint);
+      if (intersect2 === null) {
         return;
       }
     }
@@ -27172,32 +27172,32 @@ var Line = class extends Object3D {
       for (let i = start, l = end - 1; i < l; i += step) {
         const a = index.getX(i);
         const b = index.getX(i + 1);
-        const intersect = checkIntersection(this, raycaster, _ray$1, localThresholdSq, a, b, i);
-        if (intersect) {
-          intersects.push(intersect);
+        const intersect2 = checkIntersection(this, raycaster, _ray$1, localThresholdSq, a, b, i);
+        if (intersect2) {
+          intersects.push(intersect2);
         }
       }
       if (this.isLineLoop) {
         const a = index.getX(end - 1);
         const b = index.getX(start);
-        const intersect = checkIntersection(this, raycaster, _ray$1, localThresholdSq, a, b, end - 1);
-        if (intersect) {
-          intersects.push(intersect);
+        const intersect2 = checkIntersection(this, raycaster, _ray$1, localThresholdSq, a, b, end - 1);
+        if (intersect2) {
+          intersects.push(intersect2);
         }
       }
     } else {
       const start = Math.max(0, drawRange.start);
       const end = Math.min(positionAttribute.count, drawRange.start + drawRange.count);
       for (let i = start, l = end - 1; i < l; i += step) {
-        const intersect = checkIntersection(this, raycaster, _ray$1, localThresholdSq, i, i + 1, i);
-        if (intersect) {
-          intersects.push(intersect);
+        const intersect2 = checkIntersection(this, raycaster, _ray$1, localThresholdSq, i, i + 1, i);
+        if (intersect2) {
+          intersects.push(intersect2);
         }
       }
       if (this.isLineLoop) {
-        const intersect = checkIntersection(this, raycaster, _ray$1, localThresholdSq, end - 1, start, end - 1);
-        if (intersect) {
-          intersects.push(intersect);
+        const intersect2 = checkIntersection(this, raycaster, _ray$1, localThresholdSq, end - 1, start, end - 1);
+        if (intersect2) {
+          intersects.push(intersect2);
         }
       }
     }
@@ -41359,17 +41359,17 @@ function zipSync(data, opts) {
 // src/mechanics.mjs
 var import_modeling = __toESM(require_src(), 1);
 var { cuboid, polygon } = import_modeling.default.primitives;
-var { union, subtract } = import_modeling.default.booleans;
+var { union, subtract, intersect } = import_modeling.default.booleans;
 var { translate, rotateZ } = import_modeling.default.transforms;
 var { extrudeLinear } = import_modeling.default.extrusions;
 var B = (x, y, z, w, d, h) => translate([x + w / 2, y + d / 2, z + h / 2], cuboid({ size: [w, d, h] }));
-var prism = (points, z, h) => translate([0, 0, z], extrudeLinear({ height: h }, polygon({ points })));
 var yz = (points, x, w) => import_modeling.default.transforms.transform([0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, x, 0, 0, 1], extrudeLinear({ height: w }, polygon({ points })));
 var DEFAULTS = [{ name: "Battleline", w: 32, d: 32, h: 48, count: 5, perUnit: 5, columns: 3, spacing: 2, base: 0 }, { name: "Dreadnought", w: 65, d: 65, h: 82, count: 1, perUnit: 1, columns: 1, spacing: 2, base: 0 }];
 var PITCH = 16;
-var GAP = 8;
-var quantize = (n) => Math.max(2, Math.ceil((n + GAP) / PITCH)) * PITCH - GAP;
-var ports = (n) => Array.from({ length: Math.round((n + GAP) / PITCH) }, (_, i) => 4 + i * PITCH);
+var GAP = -8;
+var BAND = 10.4;
+var quantize = (n) => Math.max(2, Math.ceil((n - 8) / PITCH)) * PITCH + 8;
+var ports = (n) => Array.from({ length: Math.round((n - 8) / PITCH) }, (_, i) => 13 + i * PITCH);
 function plan(types2, clearance2 = 0.3, layout2 = { mode: "row", columns: 2, layers: 2 }) {
   if (!Number.isFinite(clearance2) || clearance2 < 0.15 || clearance2 > 0.6) throw Error("Clearance must be 0.15\u20130.60 mm");
   if (!Array.isArray(types2) || !types2.length) throw Error("Add at least one miniature type");
@@ -41377,12 +41377,12 @@ function plan(types2, clearance2 = 0.3, layout2 = { mode: "row", columns: 2, lay
   for (const [type, t] of types2.entries()) {
     const perUnit = t.perUnit ?? 5, columns = t.columns ?? 0, spacing = t.spacing ?? 2, base = t.base ?? 0;
     if (![t.w, t.d, t.h, t.count, perUnit, columns, spacing, base].every(Number.isFinite) || Math.min(t.w, t.d, t.h) < 5 || !Number.isInteger(t.count) || t.count < 1 || t.count > 200 || !Number.isInteger(perUnit) || perUnit < 1 || perUnit > 100 || !Number.isInteger(columns) || columns < 0 || columns > 100 || spacing < 2 || spacing > 20 || base < 0 || base + 2.2 > Math.min(t.w, t.d) && base > 0) throw Error("Invalid model dimensions, quantity, spacing or base");
-    const maxC = Math.floor((232 - 4.8 + spacing) / (t.w + spacing)), maxR = Math.floor((232 - 4.8 + spacing) / (t.d + spacing)), h = Math.max(26, t.h + 8.4);
+    const maxC = Math.floor((248 - 2 * BAND + spacing) / (t.w + spacing)), maxR = Math.floor((248 - 2 * BAND + spacing) / (t.d + spacing)), h = Math.max(26, t.h + 8.4);
     if (maxC < 1 || maxR < 1 || h + 4.4 > 250) throw Error("Miniature exceeds 250 mm part envelope including integral features");
     let remaining = t.count;
     while (remaining) {
-      const target = Math.min(perUnit, remaining, maxC * maxR), cols = Math.min(columns || Math.ceil(Math.sqrt(target * t.d / t.w)), maxC, target), n = Math.min(target, cols * maxR), rows = Math.ceil(n / cols), w = quantize(cols * t.w + (cols - 1) * spacing + 4.8), d = quantize(rows * t.d + (rows - 1) * spacing + 4.8), models = [];
-      for (let i = 0; i < n; i++) models.push({ x: 2.4 + i % cols * (t.w + spacing), y: 2.4 + Math.floor(i / cols) * (t.d + spacing), z: 2.4, w: t.w, d: t.d, h: t.h });
+      const target = Math.min(perUnit, remaining, maxC * maxR), cols = Math.min(columns || Math.ceil(Math.sqrt(target * t.d / t.w)), maxC, target), n = Math.min(target, cols * maxR), rows = Math.ceil(n / cols), w = quantize(cols * t.w + (cols - 1) * spacing + 2 * BAND), d = quantize(rows * t.d + (rows - 1) * spacing + 2 * BAND), models = [];
+      for (let i = 0; i < n; i++) models.push({ x: BAND + i % cols * (t.w + spacing), y: BAND + Math.floor(i / cols) * (t.d + spacing), z: 2.4, w: t.w, d: t.d, h: t.h });
       boxes.push({ id: boxes.length, type, name: t.name || "Miniature", w, d, h, x: 0, y: 0, z: 0, mini: { w: t.w, d: t.d, h: t.h }, models, columns: cols, rows, base, spacing });
       remaining -= n;
     }
@@ -41439,31 +41439,33 @@ function plan(types2, clearance2 = 0.3, layout2 = { mode: "row", columns: 2, lay
     }
     if (axis) joints.push({ a: a.id, b: b.id, axis, count });
   }
-  return { version: 3, layout: { mode, columns: nc, layers }, clearance: clearance2, wall: 2.4, floor: 2.4, boxes, joints, width: Math.max(...boxes.map((b) => b.x + b.w)) + 12, depth: Math.max(...boxes.map((b) => b.y + b.d)) + 12, height: Math.max(...boxes.map((b) => b.z + b.h)) + 4.4, modelCount: boxes.reduce((s, b) => s + b.models.length, 0), smallParts: 0 };
+  return { version: 4, layout: { mode, columns: nc, layers }, clearance: clearance2, wall: BAND, floor: 2.4, seamOverlap: 8, boxes, joints, width: Math.max(...boxes.map((b) => b.x + b.w)), depth: Math.max(...boxes.map((b) => b.y + b.d)), height: Math.max(...boxes.map((b) => b.z + b.h)) + 3.95, modelCount: boxes.reduce((s, b) => s + b.models.length, 0), smallParts: 0 };
 }
-var maleAt = (w, p) => prism([[w - 0.3, p - 1.4], [w, p - 1.4], [w + 4, p - 2.8], [w + 4, p + 2.8], [w, p + 1.4], [w - 0.3, p + 1.4]], 0, 7);
-var femaleAt = (p, c) => subtract(B(-7.8, p - 4, 0, 8.1, 8, 8), prism([[-8.1, p - 1.4 - c], [-8, p - 1.4 - c], [-4 + c, p - 2.8 - c], [-4 + c, p + 2.8 + c], [-8, p + 1.4 + c], [-8.1, p + 1.4 + c]], -1, 10));
+var tongueProfile = (w, p, c = 0) => polygon({ points: [[w - 4.3, p - 1.4 - c], [w - 4 + c, p - 1.4 - c], [w + c, p - 2.8 - c], [w + c, p + 2.8 + c], [w - 4 + c, p + 1.4 + c], [w - 4.3, p + 1.4 + c]] });
+var tongue = (w, p, z, h, c = 0) => translate([0, 0, z], extrudeLinear({ height: h }, tongueProfile(w, p, c)));
 var sideY = (s) => import_modeling.default.transforms.mirrorY(rotateZ(-Math.PI / 2, s));
 function male(b, c) {
-  return union(...ports(b.d).map((p) => maleAt(b.w, p)));
+  return union(...ports(b.d).map((p) => tongue(b.w, p, 0, b.h)));
 }
-function latchWidth(b) {
-  return Math.min(32, b.w - 8);
-}
+var latchWidth = (b) => Math.min(24, Math.min(b.w, b.d) - 22);
 function lidTabs(b) {
-  const { w, d, h } = b, tw = latchWidth(b), sx = (w - tw) / 2;
-  const front = union(B(sx, -2, h - 14, tw, 1.6, 14.6), yz([[-0.5, h - 10], [0.8, h - 10], [-0.5, h - 8.7]], sx, tw));
-  return [front, translate([0, d, 0], import_modeling.default.transforms.mirrorY(front))];
+  const tw = latchWidth(b), sx = (b.w - tw) / 2, h = b.h;
+  const front = union(B(sx, 7.6, h - 14, tw, 1.2, 14.6), yz([[8.7, h - 10], [10, h - 10], [8.7, h - 8.6]], sx, tw));
+  return [translate([0, b.d, 0], import_modeling.default.transforms.mirrorY(front)), translate([b.w, 0, 0], rotateZ(Math.PI / 2, translate([(b.d - b.w) / 2, 0, 0], front)))];
 }
-var corners = (b) => [[1.2, 1.2], [b.w - 1.2, 1.2], [1.2, b.d - 1.2], [b.w - 1.2, b.d - 1.2]];
+function latchCuts(b, c) {
+  const tw = latchWidth(b), sx = (b.w - tw) / 2, h = b.h;
+  const front = union(B(sx - c, 5.1, h - 14.4, tw + 2 * c, 3.7, 15.4), yz([[8.5, h - 10 - c], [10.1 + c, h - 10 - c], [8.5, h - 8.1 + c]], sx - c, tw + 2 * c));
+  return [translate([0, b.d, 0], import_modeling.default.transforms.mirrorY(front)), translate([b.w, 0, 0], rotateZ(Math.PI / 2, translate([(b.d - b.w) / 2, 0, 0], front)))];
+}
+var corners = (b) => [[6, 6], [b.w - 6, 6], [6, b.d - 6], [b.w - 6, b.d - 6]];
 function pyramid(x, y, z, r) {
-  return import_modeling.default.booleans.intersect(yz([[y - r, z], [y + r, z], [y, z + r * 1.1]], x - r, 2 * r), translate([x, y, 0], rotateZ(Math.PI / 2, yz([[-r, z], [r, z], [0, z + r * 1.1]], -r, 2 * r))));
+  return intersect(yz([[y - r, z], [y + r, z], [y, z + r * 1.1]], x - r, 2 * r), translate([x, y, 0], rotateZ(Math.PI / 2, yz([[-r, z], [r, z], [0, z + r * 1.1]], -r, 2 * r))));
 }
 function body(b, c) {
-  const { w, d, h } = b, tw = latchWidth(b), sx = (w - tw) / 2;
-  let shell = union(subtract(B(0, 0, 0, w, d, h), B(2.4, 2.4, 2.4, w - 4.8, d - 4.8, h)), ...ports(d).map((p) => femaleAt(p, c)), male(b, c), sideY(union(...ports(w).map((p) => femaleAt(p, c)))), sideY(union(...ports(w).map((p) => maleAt(d, p)))));
-  const pocket = yz([[-0.2, h - 10 - c], [0.8 + c, h - 10 - c], [0.8 + c, h - 10], [-0.2, h - 9 + c]], sx - c, tw + 2 * c);
-  shell = subtract(shell, pocket, translate([0, d, 0], import_modeling.default.transforms.mirrorY(pocket)));
+  const { w, d, h } = b;
+  let shell = subtract(union(B(4 + c / 2, 4 + c / 2, 0, w - 8 - c, d - 8 - c, h), male(b, c), sideY(union(...ports(w).map((p) => tongue(d, p, 0, h))))), B(BAND, BAND, 2.4, w - 2 * BAND, d - 2 * BAND, h), ...ports(d).map((p) => tongue(8, p, -1, h + 2, c)), ...ports(w).map((p) => sideY(tongue(8, p, -1, h + 2, c))));
+  for (const cut of latchCuts(b, c)) shell = subtract(shell, cut);
   for (const [x, y] of corners(b)) {
     shell = union(shell, B(x - 1.2, y - 1.2, h - 0.1, 2.4, 2.4, 3.5), pyramid(x, y, h + 3.4, 0.5));
     shell = subtract(shell, pyramid(x, y, -0.01, 0.5 + c));
@@ -41473,21 +41475,25 @@ function body(b, c) {
     shell = subtract(shell, B(cx - k / 2, cy - k / 2, 1.8, k, k, 0.7));
   }
   const ribs = [];
-  for (let col = 1; col < b.columns; col++) ribs.push(B(2.4 + col * (b.mini.w + b.spacing) - b.spacing / 2 - 0.4, 2, 2, 0.8, d - 4, 2.4));
-  for (let row = 1; row < b.rows; row++) ribs.push(B(2, 2.4 + row * (b.mini.d + b.spacing) - b.spacing / 2 - 0.4, 2, w - 4, 0.8, 2.4));
-  return ribs.length ? union(shell, ...ribs) : shell;
+  for (let col = 1; col < b.columns; col++) ribs.push(B(BAND + col * (b.mini.w + b.spacing) - b.spacing / 2 - 0.4, BAND - 0.4, 2, 0.8, d - 2 * BAND + 0.8, 2.4));
+  for (let row = 1; row < b.rows; row++) ribs.push(B(BAND - 0.4, BAND + row * (b.mini.d + b.spacing) - b.spacing / 2 - 0.4, 2, w - 2 * BAND + 0.8, 0.8, 2.4));
+  return import_modeling.default.modifiers.retessellate(ribs.length ? union(shell, ...ribs) : shell);
 }
 function lid(b, c) {
   const { w, d, h } = b;
-  let s = union(B(0, -2, h + 0.3, w, d + 4, 2.4), ...lidTabs(b), B(2.4 + c, 3, h - 2, 1.2, d - 6, 2.6), B(w - 3.6 - c, 3, h - 2, 1.2, d - 6, 2.6));
+  let s = union(B(4 + c, 4 + c, h + 0.3, w - 8 - 2 * c, d - 8 - 2 * c, 2.4), ...lidTabs(b));
+  if (d > 48) s = union(s, B(BAND + c, 23.6, h - 2, 1.2, d - 47.2, 2.6), B(w - BAND - 1.2 - c, 23.6, h - 2, 1.2, d - 47.2, 2.6));
   for (const [x, y] of corners(b)) s = subtract(s, B(x - 1.2 - c, y - 1.2 - c, h - 1, 2.4 + 2 * c, 2.4 + 2 * c, 6));
-  return s;
+  const access = B(w / 2 - 9, 9.1, h - 3, 18, 14.1, 7);
+  s = subtract(s, translate([0, d, 0], import_modeling.default.transforms.mirrorY(access)), translate([w, 0, 0], rotateZ(Math.PI / 2, translate([(d - w) / 2, 0, 0], access))));
+  return import_modeling.default.modifiers.retessellate(s);
 }
-var INSTRUCTIONS = `# mboxeditor v3 \u2014 two integral parts; no loose hardware
-CAD prototype: NOT physically printed, fatigue tested or load-rated. No support material intended. Body base down; exported lid automatically top-face down. 45-degree hook/socket roofs and steeper pyramid stack recesses; XY channels open through their complete height. No intentional bridging allowance. Slicer and physical print validation still required.
-X right / Y back / Z up. LEFT and FRONT are female; RIGHT and BACK male. Origins advance shell W+8 / D+8, exact multiples of 16 mm. Ports at 4+16k, >=2 per edge. Different edge lengths share min(port counts) when front/left aligned. Do not rotate genders or claim arbitrary adjacency. Mixed grid rows with shorter units can leave gaps: settings.joints lists only actual engaged edges.
-Join XY by lowering male into open female channels before fitting lids. Through channels have NO vertical stop or lock. Assembly rests on a flat surface. Four wall-top corner seats project through lid notches and carry the upper body base; four 45-degree keys/recesses locate identical-footprint stacks. Stack pitch H+3.4. No vertical stack latch; never lift the kit by its upper unit. Stack preview rejects unequal footprint/height.
-Lid remains lift-on with broad integral front/back skirts. Manually spread BOTH skirts 1.5 mm during insertion/removal. Sloped hooks are not a physically validated snap mechanism. No unsupported rectangular body pocket roofs. Carry upright with TWO HANDS SUPPORTING ALL BASES, not by lid or side connector. Upside-down, impact, creep, fatigue, print adhesion and carrying performance unvalidated. PETG / 0.4 nozzle / 0.2 layers are starting suggestions only. Calibrate a full body/lid pair first.
+var INSTRUCTIONS = `# mboxeditor v4 \u2014 recessed seam, two parts/unit
+Unprinted CAD prototype; NOT load-rated or physically validated. Body base down, lid automatically top-face down. No loose hardware. No support geometry intended; validate slicer and a complete pair before batching.
+Nominal rectangle W/D=16n+8, n>=2; cavity starts 10.4 mm inside it. Neighbour origins advance W-8 / D-8 (16n). Rectangular reservations overlap 8 mm; the actual complementary wall profiles do NOT overlap. Wall butt datum is 4 mm inside each reserved edge. Tongues lie entirely inside the reservation. LEFT/FRONT female, RIGHT/BACK male, port centres 13+16k. Full-height dovetails slide vertically; lower bodies together BEFORE lids. At least two actual ports per side. No vertical lock or stop. Four-neighbour grid requires simultaneous vertical insertion, not horizontal pressing.
+Four wall-borne corner seats at (6,6) and mirrored coordinates support same-footprint stacks at H+3.4; 47.7 degree pyramid keys locate but do not latch. Lid corner notches clear seats; lid is not the load path. Stack requires identical footprints/heights in preview.
+Lid stays lift-on with two broad integral INTERNAL leaves in the RIGHT/BACK wall bands, not external skirts. Width 18\u201324 mm, thickness 1.2 mm, free length 14 mm; inward hooks engage sloped wall pockets. From the lid-top openings press BOTH leaves OUTWARD into their recessed wall space, hold released while lowering/lifting, then let go to latch. Nominal manual release is 1.4 mm at hook (elastic bending/force NOT validated). The two 18 mm-wide top apertures remain accessible between neighbouring lids; remove upper stacked bodies before accessing lower lids. Hooks give positive CAD vertical retention, NOT a certified snap or inversion-safe transport latch. Fit lids after joining bodies; remove lids before sliding bodies apart. Mixed-size grids can have unjoined neighbours: only settings.joints denotes engagement.
+Rebated walls shorten the connector load arm; no measured strength improvement is claimed. No fatigue, adhesion, impact, friction, bending or print test performed. Carry upright with TWO HANDS SUPPORTING ALL BASES. Never lift by lids, an end unit or an upper unit.
 `;
 
 // src/engine.mjs
@@ -41498,12 +41504,38 @@ function printSolid(part) {
   return translate2(min.map((v) => -v), s);
 }
 function triangles(solid) {
-  const ps = import_modeling2.default.geometries.geom3.toPolygons(import_modeling2.default.modifiers.generalize({ snap: true, simplify: true, triangulate: true }, solid));
-  return ps.flatMap((p) => {
-    const a = [];
-    for (let i = 1; i < p.vertices.length - 1; i++) a.push([p.vertices[0], p.vertices[i], p.vertices[i + 1]]);
-    return a;
-  });
+  const ps = import_modeling2.default.geometries.geom3.toPolygons(solid), vertices = [], eps = 1e-3;
+  const weld = (p) => {
+    let i = vertices.findIndex((v) => Math.hypot(...v.map((x, k) => x - p[k])) < eps);
+    if (i < 0) {
+      i = vertices.length;
+      vertices.push([...p]);
+    }
+    return i;
+  };
+  const faces = ps.map((p) => p.vertices.map(weld));
+  const out = [];
+  for (const f of faces) {
+    const ring = [];
+    for (let k = 0; k < f.length; k++) {
+      const a = vertices[f[k]], b = vertices[f[(k + 1) % f.length]], u = b.map((v, i) => v - a[i]), l2 = u.reduce((s, v) => s + v * v, 0);
+      if (l2 < eps * eps) continue;
+      const cuts = [];
+      for (let i = 0; i < vertices.length; i++) {
+        const v = vertices[i], t = v.reduce((s, x, j) => s + (x - a[j]) * u[j], 0) / l2;
+        if (t >= 0 && t < 1 - 1e-8 && Math.hypot(...v.map((x, j) => x - a[j] - t * u[j])) < eps) cuts.push([t, i]);
+      }
+      cuts.sort((a2, b2) => a2[0] - b2[0]);
+      ring.push(...cuts.map((c) => vertices[c[1]]));
+    }
+    if (ring.length < 3) continue;
+    const center = [0, 1, 2].map((k) => ring.reduce((s, p) => s + p[k], 0) / ring.length);
+    for (let i = 0; i < ring.length; i++) {
+      const a = ring[i], b = ring[(i + 1) % ring.length], u = a.map((x, k) => x - center[k]), v = b.map((x, k) => x - center[k]);
+      if (Math.hypot(u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]) > 1e-9) out.push([center, a, b]);
+    }
+  }
+  return out;
 }
 function bounds(solid) {
   const [a, b] = import_modeling2.default.measurements.measureBoundingBox(solid);
