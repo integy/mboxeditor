@@ -722,7 +722,7 @@ var require_orthogonal = __commonJS({
 // node_modules/@jscad/modeling/src/maths/vec3/rotateX.js
 var require_rotateX = __commonJS({
   "node_modules/@jscad/modeling/src/maths/vec3/rotateX.js"(exports, module) {
-    var rotateX = (out, vector, origin, radians) => {
+    var rotateX2 = (out, vector, origin, radians) => {
       const p = [];
       const r = [];
       p[0] = vector[0] - origin[0];
@@ -736,7 +736,7 @@ var require_rotateX = __commonJS({
       out[2] = r[2] + origin[2];
       return out;
     };
-    module.exports = rotateX;
+    module.exports = rotateX2;
   }
 });
 
@@ -764,7 +764,7 @@ var require_rotateY = __commonJS({
 // node_modules/@jscad/modeling/src/maths/vec3/rotateZ.js
 var require_rotateZ = __commonJS({
   "node_modules/@jscad/modeling/src/maths/vec3/rotateZ.js"(exports, module) {
-    var rotateZ = (out, vector, origin, radians) => {
+    var rotateZ2 = (out, vector, origin, radians) => {
       const p = [];
       const r = [];
       p[0] = vector[0] - origin[0];
@@ -776,7 +776,7 @@ var require_rotateZ = __commonJS({
       out[2] = vector[2];
       return out;
     };
-    module.exports = rotateZ;
+    module.exports = rotateZ2;
   }
 });
 
@@ -1219,7 +1219,7 @@ var require_rotate = __commonJS({
 var require_rotateX2 = __commonJS({
   "node_modules/@jscad/modeling/src/maths/mat4/rotateX.js"(exports, module) {
     var { sin, cos } = require_trigonometry();
-    var rotateX = (out, matrix, radians) => {
+    var rotateX2 = (out, matrix, radians) => {
       const s = sin(radians);
       const c = cos(radians);
       const a10 = matrix[4];
@@ -1250,7 +1250,7 @@ var require_rotateX2 = __commonJS({
       out[11] = a23 * c - a13 * s;
       return out;
     };
-    module.exports = rotateX;
+    module.exports = rotateX2;
   }
 });
 
@@ -1297,7 +1297,7 @@ var require_rotateY2 = __commonJS({
 var require_rotateZ2 = __commonJS({
   "node_modules/@jscad/modeling/src/maths/mat4/rotateZ.js"(exports, module) {
     var { sin, cos } = require_trigonometry();
-    var rotateZ = (out, matrix, radians) => {
+    var rotateZ2 = (out, matrix, radians) => {
       const s = sin(radians);
       const c = cos(radians);
       const a00 = matrix[0];
@@ -1328,7 +1328,7 @@ var require_rotateZ2 = __commonJS({
       out[7] = a13 * c - a03 * s;
       return out;
     };
-    module.exports = rotateZ;
+    module.exports = rotateZ2;
   }
 });
 
@@ -3478,7 +3478,7 @@ var require_fromNoisyPoints = __commonJS({
       let xy = 0;
       let xz = 0;
       let yy = 0;
-      let yz = 0;
+      let yz2 = 0;
       let zz = 0;
       const vn = vec3.create();
       vertices.forEach((v) => {
@@ -3487,37 +3487,37 @@ var require_fromNoisyPoints = __commonJS({
         xy += vn[0] * vn[1];
         xz += vn[0] * vn[2];
         yy += vn[1] * vn[1];
-        yz += vn[1] * vn[2];
+        yz2 += vn[1] * vn[2];
         zz += vn[2] * vn[2];
       });
       xx /= n;
       xy /= n;
       xz /= n;
       yy /= n;
-      yz /= n;
+      yz2 /= n;
       zz /= n;
       vn[0] = 0;
       vn[1] = 0;
       vn[2] = 0;
       const wdv = vec3.create();
-      let det = yy * zz - yz * yz;
+      let det = yy * zz - yz2 * yz2;
       wdv[0] = det;
-      wdv[1] = xz * yz - xy * zz;
-      wdv[2] = xy * yz - xz * yy;
+      wdv[1] = xz * yz2 - xy * zz;
+      wdv[2] = xy * yz2 - xz * yy;
       let weight = det * det;
       vec3.add(vn, vn, vec3.scale(wdv, wdv, weight));
       det = xx * zz - xz * xz;
-      wdv[0] = xz * yz - xy * zz;
+      wdv[0] = xz * yz2 - xy * zz;
       wdv[1] = det;
-      wdv[2] = xy * xz - yz * xx;
+      wdv[2] = xy * xz - yz2 * xx;
       weight = det * det;
       if (vec3.dot(vn, wdv) < 0) {
         weight = -weight;
       }
       vec3.add(vn, vn, vec3.scale(wdv, wdv, weight));
       det = xx * yy - xy * xy;
-      wdv[0] = xy * yz - xz * yy;
-      wdv[1] = xy * xz - yz * xx;
+      wdv[0] = xy * yz2 - xz * yy;
+      wdv[1] = xy * xz - yz2 * xx;
       wdv[2] = det;
       weight = det * det;
       if (vec3.dot(vn, wdv) < 0) {
@@ -9219,14 +9219,14 @@ var require_rotate3 = __commonJS({
       });
       return results.length === 1 ? results[0] : results;
     };
-    var rotateX = (angle, ...objects) => rotate([angle, 0, 0], objects);
+    var rotateX2 = (angle, ...objects) => rotate([angle, 0, 0], objects);
     var rotateY = (angle, ...objects) => rotate([0, angle, 0], objects);
-    var rotateZ = (angle, ...objects) => rotate([0, 0, angle], objects);
+    var rotateZ2 = (angle, ...objects) => rotate([0, 0, angle], objects);
     module.exports = {
       rotate,
-      rotateX,
+      rotateX: rotateX2,
       rotateY,
-      rotateZ
+      rotateZ: rotateZ2
     };
   }
 });
@@ -11399,7 +11399,7 @@ var require_offsetFromPoints = __commonJS({
         closed: false,
         segments: 16
       };
-      let { delta, corners, closed, segments } = Object.assign({}, defaults, options);
+      let { delta, corners: corners2, closed, segments } = Object.assign({}, defaults, options);
       if (Math.abs(delta) < EPS) return points;
       let rotation = options.closed ? area(points) : 1;
       if (rotation === 0) rotation = 1;
@@ -11450,7 +11450,7 @@ var require_offsetFromPoints = __commonJS({
           newCorners.push({ c: p0, s0: previousSegment, s1: cursegment });
         }
       }
-      if (corners === "edge") {
+      if (corners2 === "edge") {
         const pointIndex = /* @__PURE__ */ new Map();
         newPoints.forEach((point, index) => pointIndex.set(point, index));
         const line0 = line2.create();
@@ -11472,7 +11472,7 @@ var require_offsetFromPoints = __commonJS({
         });
         newPoints = newPoints.filter((p) => p !== void 0);
       }
-      if (corners === "round") {
+      if (corners2 === "round") {
         let cornersegments = Math.floor(segments / 4);
         const v0 = vec2.create();
         newCorners.forEach((corner) => {
@@ -11528,15 +11528,15 @@ var require_expandGeom2 = __commonJS({
         corners: "edge",
         segments: 16
       };
-      const { delta, corners, segments } = Object.assign({}, defaults, options);
-      if (!(corners === "edge" || corners === "chamfer" || corners === "round")) {
+      const { delta, corners: corners2, segments } = Object.assign({}, defaults, options);
+      if (!(corners2 === "edge" || corners2 === "chamfer" || corners2 === "round")) {
         throw new Error('corners must be "edge", "chamfer", or "round"');
       }
       const outlines = geom2.toOutlines(geometry);
       const newoutlines = outlines.map((outline) => {
         options = {
           delta,
-          corners,
+          corners: corners2,
           closed: true,
           segments
         };
@@ -11760,13 +11760,13 @@ var require_expandGeom3 = __commonJS({
         corners: "round",
         segments: 12
       };
-      const { delta, corners, segments } = Object.assign({}, defaults, options);
-      if (!(corners === "round")) {
+      const { delta, corners: corners2, segments } = Object.assign({}, defaults, options);
+      if (!(corners2 === "round")) {
         throw new Error('corners must be "round" for 3D geometries');
       }
       const polygons = geom3.toPolygons(geometry);
       if (polygons.length === 0) throw new Error("the given geometry cannot be empty");
-      options = { delta, corners, segments };
+      options = { delta, corners: corners2, segments };
       const expanded = expandShell(options, geometry);
       return union2(geometry, expanded);
     };
@@ -11796,12 +11796,12 @@ var require_expandPath2 = __commonJS({
       externalSides.push(...internalSides);
       return geom2.create(externalSides);
     };
-    var createGeometryFromExpandedOpenPath = (paths, segments, corners, delta) => {
+    var createGeometryFromExpandedOpenPath = (paths, segments, corners2, delta) => {
       const { points, external, internal } = paths;
       const capSegments = Math.floor(segments / 2);
       const e2iCap = [];
       const i2eCap = [];
-      if (corners === "round" && capSegments > 0) {
+      if (corners2 === "round" && capSegments > 0) {
         const step = Math.PI / capSegments;
         const eCorner = points[points.length - 1];
         const e2iStart = vec2.angle(vec2.subtract(vec2.create(), external[external.length - 1], eCorner));
@@ -11831,9 +11831,9 @@ var require_expandPath2 = __commonJS({
         segments: 16
       };
       options = Object.assign({}, defaults, options);
-      const { delta, corners, segments } = options;
+      const { delta, corners: corners2, segments } = options;
       if (delta <= 0) throw new Error("the given delta must be positive for paths");
-      if (!(corners === "edge" || corners === "chamfer" || corners === "round")) {
+      if (!(corners2 === "edge" || corners2 === "chamfer" || corners2 === "round")) {
         throw new Error('corners must be "edge", "chamfer", or "round"');
       }
       const closed = geometry.isClosed;
@@ -11841,13 +11841,13 @@ var require_expandPath2 = __commonJS({
       if (points.length === 0) throw new Error("the given geometry cannot be empty");
       const paths = {
         points,
-        external: offsetFromPoints({ delta, corners, segments, closed }, points),
-        internal: offsetFromPoints({ delta: -delta, corners, segments, closed }, points)
+        external: offsetFromPoints({ delta, corners: corners2, segments, closed }, points),
+        internal: offsetFromPoints({ delta: -delta, corners: corners2, segments, closed }, points)
       };
       if (geometry.isClosed) {
         return createGeometryFromClosedOffsets(paths);
       } else {
-        return createGeometryFromExpandedOpenPath(paths, segments, corners, delta);
+        return createGeometryFromExpandedOpenPath(paths, segments, corners2, delta);
       }
     };
     module.exports = expandPath2;
@@ -11891,8 +11891,8 @@ var require_offsetGeom2 = __commonJS({
         corners: "edge",
         segments: 0
       };
-      const { delta, corners, segments } = Object.assign({}, defaults, options);
-      if (!(corners === "edge" || corners === "chamfer" || corners === "round")) {
+      const { delta, corners: corners2, segments } = Object.assign({}, defaults, options);
+      if (!(corners2 === "edge" || corners2 === "chamfer" || corners2 === "round")) {
         throw new Error('corners must be "edge", "chamfer", or "round"');
       }
       const outlines = geom2.toOutlines(geometry);
@@ -11901,7 +11901,7 @@ var require_offsetGeom2 = __commonJS({
         const outside = level % 2 === 0;
         options = {
           delta: outside ? delta : -delta,
-          corners,
+          corners: corners2,
           closed: true,
           segments
         };
@@ -11926,11 +11926,11 @@ var require_offsetPath2 = __commonJS({
         closed: geometry.isClosed,
         segments: 16
       };
-      const { delta, corners, closed, segments } = Object.assign({}, defaults, options);
-      if (!(corners === "edge" || corners === "chamfer" || corners === "round")) {
+      const { delta, corners: corners2, closed, segments } = Object.assign({}, defaults, options);
+      if (!(corners2 === "edge" || corners2 === "chamfer" || corners2 === "round")) {
         throw new Error('corners must be "edge", "chamfer", or "round"');
       }
-      options = { delta, corners, closed, segments };
+      options = { delta, corners: corners2, closed, segments };
       const newpoints = offsetFromPoints(options, path2.toPoints(geometry));
       return path2.fromPoints({ closed }, newpoints);
     };
@@ -17596,7 +17596,7 @@ var Vector4 = class _Vector4 {
       const zz = (m33 + 1) / 2;
       const xy = (m12 + m21) / 4;
       const xz = (m13 + m31) / 4;
-      const yz = (m23 + m32) / 4;
+      const yz2 = (m23 + m32) / 4;
       if (xx > yy && xx > zz) {
         if (xx < epsilon) {
           x = 0;
@@ -17615,7 +17615,7 @@ var Vector4 = class _Vector4 {
         } else {
           y = Math.sqrt(yy);
           x = xy / y;
-          z = yz / y;
+          z = yz2 / y;
         }
       } else {
         if (zz < epsilon) {
@@ -17625,7 +17625,7 @@ var Vector4 = class _Vector4 {
         } else {
           z = Math.sqrt(zz);
           x = xz / z;
-          y = yz / z;
+          y = yz2 / z;
         }
       }
       this.set(x, y, z, angle);
@@ -20253,7 +20253,7 @@ var Matrix4 = class _Matrix4 {
    * @param {number} zy - The amount to shear Z by Y.
    * @return {Matrix4} A reference to this matrix.
    */
-  makeShear(xy, xz, yx, yz, zx, zy) {
+  makeShear(xy, xz, yx, yz2, zx, zy) {
     this.set(
       1,
       yx,
@@ -20264,7 +20264,7 @@ var Matrix4 = class _Matrix4 {
       zy,
       0,
       xz,
-      yz,
+      yz2,
       1,
       0,
       0,
@@ -20288,7 +20288,7 @@ var Matrix4 = class _Matrix4 {
     const x = quaternion._x, y = quaternion._y, z = quaternion._z, w = quaternion._w;
     const x2 = x + x, y2 = y + y, z2 = z + z;
     const xx = x * x2, xy = x * y2, xz = x * z2;
-    const yy = y * y2, yz = y * z2, zz = z * z2;
+    const yy = y * y2, yz2 = y * z2, zz = z * z2;
     const wx = w * x2, wy = w * y2, wz = w * z2;
     const sx = scale.x, sy = scale.y, sz = scale.z;
     te2[0] = (1 - (yy + zz)) * sx;
@@ -20297,10 +20297,10 @@ var Matrix4 = class _Matrix4 {
     te2[3] = 0;
     te2[4] = (xy - wz) * sy;
     te2[5] = (1 - (xx + zz)) * sy;
-    te2[6] = (yz + wx) * sy;
+    te2[6] = (yz2 + wx) * sy;
     te2[7] = 0;
     te2[8] = (xz + wy) * sz;
-    te2[9] = (yz - wx) * sz;
+    te2[9] = (yz2 - wx) * sz;
     te2[10] = (1 - (xx + yy)) * sz;
     te2[11] = 0;
     te2[12] = position.x;
@@ -41360,74 +41360,143 @@ function zipSync(data, opts) {
 var import_modeling = __toESM(require_src(), 1);
 var { cuboid, polygon } = import_modeling.default.primitives;
 var { union, subtract } = import_modeling.default.booleans;
-var { translate } = import_modeling.default.transforms;
+var { translate, rotateZ } = import_modeling.default.transforms;
 var { extrudeLinear } = import_modeling.default.extrusions;
 var B = (x, y, z, w, d, h) => translate([x + w / 2, y + d / 2, z + h / 2], cuboid({ size: [w, d, h] }));
 var prism = (points, z, h) => translate([0, 0, z], extrudeLinear({ height: h }, polygon({ points })));
+var yz = (points, x, w) => import_modeling.default.transforms.transform([0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, x, 0, 0, 1], extrudeLinear({ height: w }, polygon({ points })));
 var DEFAULTS = [{ name: "Battleline", w: 32, d: 32, h: 48, count: 5, perUnit: 5, columns: 3, spacing: 2, base: 0 }, { name: "Dreadnought", w: 65, d: 65, h: 82, count: 1, perUnit: 1, columns: 1, spacing: 2, base: 0 }];
-function plan(types2, clearance2 = 0.3) {
+var PITCH = 16;
+var GAP = 8;
+var quantize = (n) => Math.max(2, Math.ceil((n + GAP) / PITCH)) * PITCH - GAP;
+var ports = (n) => Array.from({ length: Math.round((n + GAP) / PITCH) }, (_, i) => 4 + i * PITCH);
+function plan(types2, clearance2 = 0.3, layout2 = { mode: "row", columns: 2, layers: 2 }) {
   if (!Number.isFinite(clearance2) || clearance2 < 0.15 || clearance2 > 0.6) throw Error("Clearance must be 0.15\u20130.60 mm");
   if (!Array.isArray(types2) || !types2.length) throw Error("Add at least one miniature type");
   const boxes = [];
-  let x = 0;
   for (const [type, t] of types2.entries()) {
     const perUnit = t.perUnit ?? 5, columns = t.columns ?? 0, spacing = t.spacing ?? 2, base = t.base ?? 0;
-    if (![t.w, t.d, t.h, t.count, perUnit, columns, spacing, base].every(Number.isFinite) || Math.min(t.w, t.d, t.h) < 5 || !Number.isInteger(t.count) || t.count < 1 || t.count > 200 || !Number.isInteger(perUnit) || perUnit < 1 || perUnit > 100 || !Number.isInteger(columns) || columns < 0 || columns > 100 || spacing < 2 || spacing > 20 || base < 0 || base + 2.2 > Math.min(t.w, t.d) && base > 0) throw Error("Envelopes \u22655 mm; models 1\u2013200; models/unit 1\u2013100; columns 0=auto; spacing 2\u201320; base pocket must fit envelope");
-    const maxC = Math.floor((241 - 4.8 + spacing) / (t.w + spacing)), maxR = Math.floor((246 - 4.8 + spacing) / (t.d + spacing)), h = Math.max(26, t.h + 8.4);
-    if (maxC < 1 || maxR < 1 || h + 2.7 > 250) throw Error("Miniature exceeds 250 mm part envelope including integral features");
+    if (![t.w, t.d, t.h, t.count, perUnit, columns, spacing, base].every(Number.isFinite) || Math.min(t.w, t.d, t.h) < 5 || !Number.isInteger(t.count) || t.count < 1 || t.count > 200 || !Number.isInteger(perUnit) || perUnit < 1 || perUnit > 100 || !Number.isInteger(columns) || columns < 0 || columns > 100 || spacing < 2 || spacing > 20 || base < 0 || base + 2.2 > Math.min(t.w, t.d) && base > 0) throw Error("Invalid model dimensions, quantity, spacing or base");
+    const maxC = Math.floor((232 - 4.8 + spacing) / (t.w + spacing)), maxR = Math.floor((232 - 4.8 + spacing) / (t.d + spacing)), h = Math.max(26, t.h + 8.4);
+    if (maxC < 1 || maxR < 1 || h + 4.4 > 250) throw Error("Miniature exceeds 250 mm part envelope including integral features");
     let remaining = t.count;
     while (remaining) {
-      const target = Math.min(perUnit, remaining, maxC * maxR), cols = Math.min(columns || Math.ceil(Math.sqrt(target * t.d / t.w)), maxC, target), n = Math.min(target, cols * maxR), rows = Math.ceil(n / cols), w = Math.max(20, cols * t.w + (cols - 1) * spacing + 4.8), d = Math.max(32, rows * t.d + (rows - 1) * spacing + 4.8), models = [];
+      const target = Math.min(perUnit, remaining, maxC * maxR), cols = Math.min(columns || Math.ceil(Math.sqrt(target * t.d / t.w)), maxC, target), n = Math.min(target, cols * maxR), rows = Math.ceil(n / cols), w = quantize(cols * t.w + (cols - 1) * spacing + 4.8), d = quantize(rows * t.d + (rows - 1) * spacing + 4.8), models = [];
       for (let i = 0; i < n; i++) models.push({ x: 2.4 + i % cols * (t.w + spacing), y: 2.4 + Math.floor(i / cols) * (t.d + spacing), z: 2.4, w: t.w, d: t.d, h: t.h });
-      boxes.push({ id: boxes.length, type, name: t.name || "Miniature", w, d, h, x, y: 0, mini: { w: t.w, d: t.d, h: t.h }, models, columns: cols, rows, base, spacing });
-      x += w + 5;
+      boxes.push({ id: boxes.length, type, name: t.name || "Miniature", w, d, h, x: 0, y: 0, z: 0, mini: { w: t.w, d: t.d, h: t.h }, models, columns: cols, rows, base, spacing });
       remaining -= n;
     }
   }
   if (boxes.length > 40) throw Error("Maximum 40 units per assembly");
-  return { version: 2, clearance: clearance2, wall: 2.4, floor: 2.4, interfaceZ: 3, boxes, joints: boxes.slice(1).map((b, i) => ({ a: i, b: i + 1, z: 3, x: b.x })), width: x + 4, depth: Math.max(...boxes.map((b) => b.d)) + 4, height: Math.max(...boxes.map((b) => b.h)) + 2.7, modelCount: boxes.reduce((s, b) => s + b.models.length, 0), smallParts: 0 };
+  const mode = layout2.mode ?? "row", nc = Math.max(1, Math.floor(layout2.columns || 2)), layers = Math.max(1, Math.floor(layout2.layers || 2));
+  if (!["row", "grid", "stack"].includes(mode)) throw Error("Unknown assembly layout");
+  if (mode === "row") {
+    let x = 0;
+    for (const b of boxes) {
+      b.x = x;
+      x += b.w + GAP;
+    }
+  }
+  if (mode === "grid") {
+    const widths = Array.from({ length: nc }, (_, col) => Math.max(0, ...boxes.filter((_2, i) => i % nc === col).map((b) => b.w))), xs = widths.map((_, i) => widths.slice(0, i).reduce((s, w) => s + w + GAP, 0));
+    let y = 0;
+    for (let i = 0; i < boxes.length; i += nc) {
+      const row = boxes.slice(i, i + nc);
+      for (const [col, b] of row.entries()) {
+        b.x = xs[col];
+        b.y = y;
+      }
+      y += Math.max(...row.map((b) => b.d)) + GAP;
+    }
+  }
+  if (mode === "stack") {
+    const first = boxes[0];
+    if (boxes.some((b) => b.w !== first.w || b.d !== first.d || b.h !== first.h)) throw Error("Stack preview requires identical footprint AND height; use equal full units (no partial units)");
+    let x = 0;
+    for (let i = 0; i < boxes.length; i += layers) {
+      for (let j = i; j < Math.min(i + layers, boxes.length); j++) {
+        boxes[j].x = x;
+        boxes[j].z = (j - i) * (first.h + 3.4);
+      }
+      x += first.w + GAP;
+    }
+  }
+  const joints = [];
+  for (const a of boxes) for (const b of boxes) {
+    if (a.id >= b.id) continue;
+    let axis = null, count = 0;
+    if (a.z === b.z && a.y === b.y && b.x === a.x + a.w + GAP) {
+      axis = "x";
+      count = Math.min(ports(a.d).length, ports(b.d).length);
+    }
+    if (a.z === b.z && a.x === b.x && b.y === a.y + a.d + GAP) {
+      axis = "y";
+      count = Math.min(ports(a.w).length, ports(b.w).length);
+    }
+    if (a.x === b.x && a.y === b.y && a.w === b.w && a.d === b.d && b.z === a.z + a.h + 3.4) {
+      axis = "z";
+      count = 4;
+    }
+    if (axis) joints.push({ a: a.id, b: b.id, axis, count });
+  }
+  return { version: 3, layout: { mode, columns: nc, layers }, clearance: clearance2, wall: 2.4, floor: 2.4, boxes, joints, width: Math.max(...boxes.map((b) => b.x + b.w)) + 12, depth: Math.max(...boxes.map((b) => b.y + b.d)) + 12, height: Math.max(...boxes.map((b) => b.z + b.h)) + 4.4, modelCount: boxes.reduce((s, b) => s + b.models.length, 0), smallParts: 0 };
 }
+var maleAt = (w, p) => prism([[w - 0.3, p - 1.4], [w, p - 1.4], [w + 4, p - 2.8], [w + 4, p + 2.8], [w, p + 1.4], [w - 0.3, p + 1.4]], 0, 7);
+var femaleAt = (p, c) => subtract(B(-7.8, p - 4, 0, 8.1, 8, 8), prism([[-8.1, p - 1.4 - c], [-8, p - 1.4 - c], [-4 + c, p - 2.8 - c], [-4 + c, p + 2.8 + c], [-8, p + 1.4 + c], [-8.1, p + 1.4 + c]], -1, 10));
+var sideY = (s) => import_modeling.default.transforms.mirrorY(rotateZ(-Math.PI / 2, s));
 function male(b, c) {
-  return prism([[b.w - 0.3, 9], [b.w, 9], [b.w + 4, 6], [b.w + 4, 18], [b.w, 15], [b.w - 0.3, 15]], 3 + c, 14 - c);
-}
-function channel(c) {
-  return prism([[-5.2, 9 - c], [-5, 9 - c], [-1 + c, 6 - c], [-1 + c, 18 + c], [-5, 15 + c], [-5.2, 15 + c]], 3, 300);
+  return union(...ports(b.d).map((p) => maleAt(b.w, p)));
 }
 function latchWidth(b) {
   return Math.min(32, b.w - 8);
 }
 function lidTabs(b) {
   const { w, d, h } = b, tw = latchWidth(b), sx = (w - tw) / 2;
-  return [union(B(sx, -2, h - 14, tw, 1.6, 14.6), B(sx, -0.5, h - 9.5, tw, 1.3, 2)), union(B(sx, d + 0.4, h - 14, tw, 1.6, 14.6), B(sx, d - 0.8, h - 9.5, tw, 1.3, 2))];
+  const front = union(B(sx, -2, h - 14, tw, 1.6, 14.6), yz([[-0.5, h - 10], [0.8, h - 10], [-0.5, h - 8.7]], sx, tw));
+  return [front, translate([0, d, 0], import_modeling.default.transforms.mirrorY(front))];
+}
+var corners = (b) => [[1.2, 1.2], [b.w - 1.2, 1.2], [1.2, b.d - 1.2], [b.w - 1.2, b.d - 1.2]];
+function pyramid(x, y, z, r) {
+  return import_modeling.default.booleans.intersect(yz([[y - r, z], [y + r, z], [y, z + r * 1.1]], x - r, 2 * r), translate([x, y, 0], rotateZ(Math.PI / 2, yz([[-r, z], [r, z], [0, z + r * 1.1]], -r, 2 * r))));
 }
 function body(b, c) {
   const { w, d, h } = b, tw = latchWidth(b), sx = (w - tw) / 2;
-  let shell = union(subtract(B(0, 0, 0, w, d, h), B(2.4, 2.4, 2.4, w - 4.8, d - 4.8, h)), subtract(B(-5, 3, 0, 5.3, 18, 18), channel(c)), male(b, c));
-  shell = subtract(shell, B(sx - c, -0.1, h - 9.5 - c, tw + 2 * c, 1.1 + c, 2 + 2 * c), B(sx - c, d - 1 - c, h - 9.5 - c, tw + 2 * c, 1.1 + c, 2 + 2 * c));
-  const ribs = [];
+  let shell = union(subtract(B(0, 0, 0, w, d, h), B(2.4, 2.4, 2.4, w - 4.8, d - 4.8, h)), ...ports(d).map((p) => femaleAt(p, c)), male(b, c), sideY(union(...ports(w).map((p) => femaleAt(p, c)))), sideY(union(...ports(w).map((p) => maleAt(d, p)))));
+  const pocket = yz([[-0.2, h - 10 - c], [0.8 + c, h - 10 - c], [0.8 + c, h - 10], [-0.2, h - 9 + c]], sx - c, tw + 2 * c);
+  shell = subtract(shell, pocket, translate([0, d, 0], import_modeling.default.transforms.mirrorY(pocket)));
+  for (const [x, y] of corners(b)) {
+    shell = union(shell, B(x - 1.2, y - 1.2, h - 0.1, 2.4, 2.4, 3.5), pyramid(x, y, h + 3.4, 0.5));
+    shell = subtract(shell, pyramid(x, y, -0.01, 0.5 + c));
+  }
   for (const m of b.models) if (b.base > 0) {
     const k = b.base + 1, cx = m.x + m.w / 2, cy = m.y + m.d / 2;
     shell = subtract(shell, B(cx - k / 2, cy - k / 2, 1.8, k, k, 0.7));
   }
+  const ribs = [];
   for (let col = 1; col < b.columns; col++) ribs.push(B(2.4 + col * (b.mini.w + b.spacing) - b.spacing / 2 - 0.4, 2, 2, 0.8, d - 4, 2.4));
   for (let row = 1; row < b.rows; row++) ribs.push(B(2, 2.4 + row * (b.mini.d + b.spacing) - b.spacing / 2 - 0.4, 2, w - 4, 0.8, 2.4));
   return ribs.length ? union(shell, ...ribs) : shell;
 }
 function lid(b, c) {
   const { w, d, h } = b;
-  return union(B(0, -2, h + 0.3, w, d + 4, 2.4), ...lidTabs(b), B(2.4 + c, 3, h - 2, 1.2, d - 6, 2.6), B(w - 3.6 - c, 3, h - 2, 1.2, d - 6, 2.6));
+  let s = union(B(0, -2, h + 0.3, w, d + 4, 2.4), ...lidTabs(b), B(2.4 + c, 3, h - 2, 1.2, d - 6, 2.6), B(w - 3.6 - c, 3, h - 2, 1.2, d - 6, 2.6));
+  for (const [x, y] of corners(b)) s = subtract(s, B(x - 1.2 - c, y - 1.2 - c, h - 1, 2.4 + 2 * c, 2.4 + 2 * c, 6));
+  return s;
 }
-var INSTRUCTIONS = `# mboxeditor v2 \u2014 two large parts per unit; zero loose small parts
-Prototype: CAD checked, NOT physically printed, fatigue tested or load-rated.
-Each unit holds multiple complete model envelopes separated by low integral ribs. Quantity means MODELS; models/unit is capacity. Partial units shrink. Columns 0=automatic, rows automatic. Excess models split into additional units. Heights independent. Walls/floor 2.4, lid 2.4, spacing >=2. Optional square base pockets use separate base width, not the full model envelope; no immobilization claim.
-Print bodies base-down; lids top-face down (rotate 180 degrees in slicer; exports rebase only). PETG suggested, 0.4 nozzle, 0.2 layers. Inspect supports/overhangs at channels and hooks. Calibrate one pair first. No hardware or separate fasteners.
-Connect front-aligned: next origin X=previous origin+W+5. Lift LEFT/male body above RIGHT/female channel, then lower it vertically until floor stop seats. Channel floor Z=3; male bottom Z=3+c. Interface independent of height. Flared trapezoid captures lateral separation. No vertical body locking: units can lift apart. Support every base.
-Lid is LIFT-ON, not a sliding rail lid. Inner lips locate, not vertically capture. Broad integral front/back cantilever skirts carry inward hooks. Spread BOTH skirts outward approximately 1.5 mm with thumbs during lowering; release only when seated. Hooks rest in recessed wall pockets without CAD interference. Spread skirts and lift to open. Do not force an unflexed lid down. Flexibility, thumb forces, fatigue and creep require real print tests; CAD checks final fit and manually released rigid-component paths, NOT elastic simulation. No automatic snap-in claim: hooks have no lead-in ramp.
-Carry upright WITH TWO HANDS SUPPORTING EVERY BASE. No handle; do not lift by lid, end unit or connector. Not inversion-safe or impact-safe; no vertical miniature restraint. Low ribs organize only. Every part <=250 including protrusions; overall row may be larger. Clearance 0.15\u20130.60 per face is not a strength guarantee. Avoid hot cars.
+var INSTRUCTIONS = `# mboxeditor v3 \u2014 two integral parts; no loose hardware
+CAD prototype: NOT physically printed, fatigue tested or load-rated. No support material intended. Body base down; exported lid automatically top-face down. 45-degree hook/socket roofs and steeper pyramid stack recesses; XY channels open through their complete height. No intentional bridging allowance. Slicer and physical print validation still required.
+X right / Y back / Z up. LEFT and FRONT are female; RIGHT and BACK male. Origins advance shell W+8 / D+8, exact multiples of 16 mm. Ports at 4+16k, >=2 per edge. Different edge lengths share min(port counts) when front/left aligned. Do not rotate genders or claim arbitrary adjacency. Mixed grid rows with shorter units can leave gaps: settings.joints lists only actual engaged edges.
+Join XY by lowering male into open female channels before fitting lids. Through channels have NO vertical stop or lock. Assembly rests on a flat surface. Four wall-top corner seats project through lid notches and carry the upper body base; four 45-degree keys/recesses locate identical-footprint stacks. Stack pitch H+3.4. No vertical stack latch; never lift the kit by its upper unit. Stack preview rejects unequal footprint/height.
+Lid remains lift-on with broad integral front/back skirts. Manually spread BOTH skirts 1.5 mm during insertion/removal. Sloped hooks are not a physically validated snap mechanism. No unsupported rectangular body pocket roofs. Carry upright with TWO HANDS SUPPORTING ALL BASES, not by lid or side connector. Upside-down, impact, creep, fatigue, print adhesion and carrying performance unvalidated. PETG / 0.4 nozzle / 0.2 layers are starting suggestions only. Calibrate a full body/lid pair first.
 `;
 
 // src/engine.mjs
-var { translate: translate2 } = import_modeling2.default.transforms;
+var { translate: translate2, rotateX } = import_modeling2.default.transforms;
+function printSolid(part) {
+  const s = part.role === "lid" ? rotateX(Math.PI, part.solid) : part.solid;
+  const [min] = import_modeling2.default.measurements.measureBoundingBox(s);
+  return translate2(min.map((v) => -v), s);
+}
 function triangles(solid) {
   const ps = import_modeling2.default.geometries.geom3.toPolygons(import_modeling2.default.modifiers.generalize({ snap: true, simplify: true, triangulate: true }, solid));
   return ps.flatMap((p) => {
@@ -41456,8 +41525,8 @@ function makeParts(p) {
   };
   for (const b of p.boxes) {
     const tag = `${b.w}x${b.d}x${b.h}_n${b.models.length}_c${b.columns}_m${b.mini.w}x${b.mini.d}_b${b.base}`;
-    add(`body_${tag}`, body(b, p.clearance), [b.x, 0, 0], "body", b.id);
-    add(`lid_${b.w}x${b.d}x${b.h}`, lid(b, p.clearance), [b.x, 0, 0], "lid", b.id);
+    add(`body_${tag}`, body(b, p.clearance), [b.x, b.y, b.z], "body", b.id);
+    add(`lid_${b.w}x${b.d}x${b.h}`, lid(b, p.clearance), [b.x, b.y, b.z], "lid", b.id);
   }
   return out;
 }
@@ -41467,9 +41536,13 @@ function stl(solid) {
   v.setUint32(80, ts.length, true);
   let k = 84;
   for (const t of ts) {
-    k += 12;
-    for (const pt of t) for (const n of pt) {
-      v.setFloat32(k, n, true);
+    const u = t[1].map((x, i) => x - t[0][i]), w = t[2].map((x, i) => x - t[0][i]), n = [u[1] * w[2] - u[2] * w[1], u[2] * w[0] - u[0] * w[2], u[0] * w[1] - u[1] * w[0]], len = Math.hypot(...n);
+    for (const x of n) {
+      v.setFloat32(k, len ? x / len : 0, true);
+      k += 4;
+    }
+    for (const pt of t) for (const n2 of pt) {
+      v.setFloat32(k, n2, true);
       k += 4;
     }
     k += 2;
@@ -41478,11 +41551,9 @@ function stl(solid) {
 }
 function exportZip(p, parts2 = makeParts(p)) {
   const files = {};
-  const bom = parts2.map(({ name, qty, size, role }) => ({ file: name + ".stl", quantity: qty, bounds_mm: size, role }));
+  const bom = parts2.map(({ name, qty, size, role, instances }) => ({ file: name + ".stl", quantity: qty, bounds_mm: size, role, print_orientation: role === "lid" ? "top-face down" : "base down", instances: instances.map(({ box, pose }) => ({ box, assembly_translation_mm: pose })) }));
   for (const a of parts2) {
-    let solid = a.solid;
-    const [min] = import_modeling2.default.measurements.measureBoundingBox(solid);
-    solid = translate2(min.map((v) => -v), solid);
+    const solid = printSolid(a);
     files[a.name + ".stl"] = stl(solid);
   }
   files["BOM.json"] = strToU8(JSON.stringify(bom, null, 2));
@@ -41512,6 +41583,17 @@ try {
 } catch {
 }
 $("#clearance").value = clearance;
+var layout = { mode: "row", columns: 2, layers: 2 };
+var layoutHost = document.createElement("div");
+layoutHost.className = "tolerance";
+layoutHost.innerHTML = '<label>\u62FC\u63A5 Layout <select id="layout"><option value="row">\u5DE6\u53F3 Row</option><option value="grid">\u524D\u5F8C\u5DE6\u53F3 Grid</option><option value="stack">\u4E0A\u4E0B Stack (equal units)</option></select></label> <label>Grid columns <input id="gridColumns" type="number" min="1" max="40" value="2"></label> <label>Stack layers <input id="stackLayers" type="number" min="1" max="40" value="2"></label>';
+$("#clearance").closest("label").after(layoutHost);
+for (const id of ["layout", "gridColumns", "stackLayers"]) $("#" + id).onchange = () => {
+  layout.mode = $("#layout").value;
+  layout.columns = +$("#gridColumns").value;
+  layout.layers = +$("#stackLayers").value;
+  update();
+};
 function cards() {
   const host = $("#types");
   host.replaceChildren();
@@ -41604,7 +41686,7 @@ function draw() {
   if ($("#ghost").checked) for (const b of current.boxes) for (const g of b.models) {
     const m = new Mesh(new BoxGeometry(g.w, g.d, g.h), new MeshStandardMaterial({ color: 9690315, transparent: true, opacity: 0.22, depthWrite: false }));
     m.userData.ghost = true;
-    m.position.set(b.x + g.x + g.w / 2, g.y + g.d / 2, g.z + g.h / 2);
+    m.position.set(b.x + g.x + g.w / 2, b.y + g.y + g.d / 2, b.z + g.z + g.h / 2);
     group.add(m);
     const edge = new LineSegments(new EdgesGeometry(m.geometry), new LineBasicMaterial({ color: 10019790, transparent: true, opacity: 0.75 }));
     m.add(edge);
@@ -41625,7 +41707,7 @@ function draw() {
     const texture = new CanvasTexture(canvas);
     const sp = new Sprite(new SpriteMaterial({ map: texture, transparent: true, depthTest: false }));
     sp.scale.set(65, 16, 1);
-    sp.position.set(b.x + b.w / 2, -13, 3);
+    sp.position.set(b.x + b.w / 2, b.y - 13, b.z + 3);
     group.add(sp);
   }
 }
@@ -41642,7 +41724,7 @@ function currentRatio() {
 }
 function update() {
   try {
-    const p = plan(types, clearance), ps = makeParts(p);
+    const p = plan(types, clearance, layout), ps = makeParts(p);
     current = p;
     parts = ps;
     $("#error").textContent = "";
