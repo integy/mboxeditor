@@ -9,9 +9,9 @@ var __commonJS = (cb, mod) => function __require() {
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
-    for (let key2 of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key2) && key2 !== except)
-        __defProp(to, key2, { get: () => from[key2], enumerable: !(desc = __getOwnPropDesc(from, key2)) || desc.enumerable });
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
   }
   return to;
 };
@@ -1398,7 +1398,7 @@ var require_toString2 = __commonJS({
 // node_modules/@jscad/modeling/src/maths/mat4/translate.js
 var require_translate = __commonJS({
   "node_modules/@jscad/modeling/src/maths/mat4/translate.js"(exports, module) {
-    var translate2 = (out, matrix, offsets) => {
+    var translate3 = (out, matrix, offsets) => {
       const x = offsets[0];
       const y = offsets[1];
       const z = offsets[2];
@@ -1451,7 +1451,7 @@ var require_translate = __commonJS({
       }
       return out;
     };
-    module.exports = translate2;
+    module.exports = translate3;
   }
 });
 
@@ -2049,11 +2049,11 @@ var require_toOutlines = __commonJS({
     var toSharedVertices = (sides) => {
       const unique = /* @__PURE__ */ new Map();
       const getUniqueVertex = (vertex2) => {
-        const key2 = vertex2.toString();
-        if (unique.has(key2)) {
-          return unique.get(key2);
+        const key = vertex2.toString();
+        if (unique.has(key)) {
+          return unique.get(key);
         } else {
-          unique.set(key2, vertex2);
+          unique.set(key, vertex2);
           return vertex2;
         }
       };
@@ -3709,11 +3709,11 @@ var require_invert2 = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly3/invert.js"(exports, module) {
     var plane = require_plane();
     var create = require_create6();
-    var invert = (polygon) => {
-      const vertices = polygon.vertices.slice().reverse();
+    var invert = (polygon2) => {
+      const vertices = polygon2.vertices.slice().reverse();
       const inverted = create(vertices);
-      if (polygon.plane) {
-        inverted.plane = plane.flip(plane.create(), polygon.plane);
+      if (polygon2.plane) {
+        inverted.plane = plane.flip(plane.create(), polygon2.plane);
       }
       return inverted;
     };
@@ -3743,7 +3743,7 @@ var require_isConvex = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly3/isConvex.js"(exports, module) {
     var plane = require_plane();
     var vec3 = require_vec3();
-    var isConvex = (polygon) => areVerticesConvex(polygon.vertices);
+    var isConvex = (polygon2) => areVerticesConvex(polygon2.vertices);
     var areVerticesConvex = (vertices) => {
       const numvertices = vertices.length;
       if (numvertices > 2) {
@@ -3778,11 +3778,11 @@ var require_isConvex = __commonJS({
 var require_plane2 = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly3/plane.js"(exports, module) {
     var mplane = require_plane();
-    var plane = (polygon) => {
-      if (!polygon.plane) {
-        polygon.plane = mplane.fromPoints(mplane.create(), ...polygon.vertices);
+    var plane = (polygon2) => {
+      if (!polygon2.plane) {
+        polygon2.plane = mplane.fromPoints(mplane.create(), ...polygon2.vertices);
       }
-      return polygon.plane;
+      return polygon2.plane;
     };
     module.exports = plane;
   }
@@ -3792,13 +3792,13 @@ var require_plane2 = __commonJS({
 var require_measureArea = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly3/measureArea.js"(exports, module) {
     var plane = require_plane2();
-    var measureArea = (polygon) => {
-      const n = polygon.vertices.length;
+    var measureArea = (polygon2) => {
+      const n = polygon2.vertices.length;
       if (n < 3) {
         return 0;
       }
-      const vertices = polygon.vertices;
-      const normal = plane(polygon);
+      const vertices = polygon2.vertices;
+      const normal = plane(polygon2);
       const ax = Math.abs(normal[0]);
       const ay = Math.abs(normal[1]);
       const az = Math.abs(normal[2]);
@@ -3856,8 +3856,8 @@ var require_measureArea = __commonJS({
 var require_measureBoundingBox = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingBox.js"(exports, module) {
     var vec3 = require_vec3();
-    var measureBoundingBox = (polygon) => {
-      const vertices = polygon.vertices;
+    var measureBoundingBox = (polygon2) => {
+      const vertices = polygon2.vertices;
       const numvertices = vertices.length;
       const min = numvertices === 0 ? vec3.create() : vec3.clone(vertices[0]);
       const max = vec3.clone(min);
@@ -3930,10 +3930,10 @@ var require_measureBoundingSphere = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingSphere.js"(exports, module) {
     var vec4 = require_vec4();
     var cache = /* @__PURE__ */ new WeakMap();
-    var measureBoundingSphere = (polygon) => {
-      const boundingSphere = cache.get(polygon);
+    var measureBoundingSphere = (polygon2) => {
+      const boundingSphere = cache.get(polygon2);
       if (boundingSphere) return boundingSphere;
-      const vertices = polygon.vertices;
+      const vertices = polygon2.vertices;
       const out = vec4.create();
       if (vertices.length === 0) {
         out[0] = 0;
@@ -3963,7 +3963,7 @@ var require_measureBoundingSphere = __commonJS({
       const y = out[1] - maxy[1];
       const z = out[2] - maxz[2];
       out[3] = Math.sqrt(x * x + y * y + z * z);
-      cache.set(polygon, out);
+      cache.set(polygon2, out);
       return out;
     };
     module.exports = measureBoundingSphere;
@@ -3974,9 +3974,9 @@ var require_measureBoundingSphere = __commonJS({
 var require_measureSignedVolume = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly3/measureSignedVolume.js"(exports, module) {
     var vec3 = require_vec3();
-    var measureSignedVolume = (polygon) => {
+    var measureSignedVolume = (polygon2) => {
       let signedVolume = 0;
-      const vertices = polygon.vertices;
+      const vertices = polygon2.vertices;
       const cross = vec3.create();
       for (let i = 0; i < vertices.length - 2; i++) {
         vec3.cross(cross, vertices[i + 1], vertices[i + 2]);
@@ -3992,7 +3992,7 @@ var require_measureSignedVolume = __commonJS({
 // node_modules/@jscad/modeling/src/geometries/poly3/toPoints.js
 var require_toPoints2 = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly3/toPoints.js"(exports, module) {
-    var toPoints = (polygon) => polygon.vertices;
+    var toPoints = (polygon2) => polygon2.vertices;
     module.exports = toPoints;
   }
 });
@@ -4001,9 +4001,9 @@ var require_toPoints2 = __commonJS({
 var require_toString6 = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly3/toString.js"(exports, module) {
     var vec3 = require_vec3();
-    var toString = (polygon) => {
+    var toString = (polygon2) => {
       let result = "poly3: vertices: [";
-      polygon.vertices.forEach((vertex2) => {
+      polygon2.vertices.forEach((vertex2) => {
         result += `${vec3.toString(vertex2)}, `;
       });
       result += "]";
@@ -4019,8 +4019,8 @@ var require_transform6 = __commonJS({
     var mat4 = require_mat4();
     var vec3 = require_vec3();
     var create = require_create6();
-    var transform = (matrix, polygon) => {
-      const vertices = polygon.vertices.map((vertex2) => vec3.transform(vec3.create(), vertex2, matrix));
+    var transform = (matrix, polygon2) => {
+      const vertices = polygon2.vertices.map((vertex2) => vec3.transform(vec3.create(), vertex2, matrix));
       if (mat4.isMirroring(matrix)) {
         vertices.reverse();
       }
@@ -4132,8 +4132,8 @@ var require_fromPoints4 = __commonJS({
         throw new Error("the given points must be an array");
       }
       const polygons = listofpoints.map((points, index) => {
-        const polygon = poly3.create(points);
-        return polygon;
+        const polygon2 = poly3.create(points);
+        return polygon2;
       });
       const result = create(polygons);
       return result;
@@ -4182,7 +4182,7 @@ var require_applyTransforms2 = __commonJS({
     var poly3 = require_poly3();
     var applyTransforms = (geometry) => {
       if (mat4.isIdentity(geometry.transforms)) return geometry;
-      geometry.polygons = geometry.polygons.map((polygon) => poly3.transform(geometry.transforms, polygon));
+      geometry.polygons = geometry.polygons.map((polygon2) => poly3.transform(geometry.transforms, polygon2));
       geometry.transforms = mat4.create();
       return geometry;
     };
@@ -4207,7 +4207,7 @@ var require_invert3 = __commonJS({
     var toPolygons = require_toPolygons();
     var invert = (geometry) => {
       const polygons = toPolygons(geometry);
-      const newpolygons = polygons.map((polygon) => poly3.invert(polygon));
+      const newpolygons = polygons.map((polygon2) => poly3.invert(polygon2));
       return create(newpolygons);
     };
     module.exports = invert;
@@ -4253,9 +4253,9 @@ var require_isConvex2 = __commonJS({
         const verts = polygons[i].vertices;
         for (let j = 0; j < verts.length; j++) {
           const v = verts[j];
-          const key2 = `${v[0]},${v[1]},${v[2]}`;
-          if (!found.has(key2)) {
-            found.add(key2);
+          const key = `${v[0]},${v[1]},${v[2]}`;
+          if (!found.has(key)) {
+            found.add(key);
             vertices.push(v);
           }
         }
@@ -4283,7 +4283,7 @@ var require_toPoints3 = __commonJS({
     var toPolygons = require_toPolygons();
     var toPoints = (geometry) => {
       const polygons = toPolygons(geometry);
-      const listofpoints = polygons.map((polygon) => poly3.toPoints(polygon));
+      const listofpoints = polygons.map((polygon2) => poly3.toPoints(polygon2));
       return listofpoints;
     };
     module.exports = toPoints;
@@ -4298,8 +4298,8 @@ var require_toString7 = __commonJS({
     var toString = (geometry) => {
       const polygons = toPolygons(geometry);
       let result = "geom3 (" + polygons.length + " polygons):\n";
-      polygons.forEach((polygon) => {
-        result += "  " + poly3.toString(polygon) + "\n";
+      polygons.forEach((polygon2) => {
+        result += "  " + poly3.toString(polygon2) + "\n";
       });
       return result;
     };
@@ -4315,7 +4315,7 @@ var require_toCompactBinary2 = __commonJS({
       const polygons = geometry.polygons;
       const transforms = geometry.transforms;
       const numberOfPolygons = polygons.length;
-      const numberOfVertices = polygons.reduce((count, polygon) => count + polygon.vertices.length, 0);
+      const numberOfVertices = polygons.reduce((count, polygon2) => count + polygon2.vertices.length, 0);
       let color = [-1, -1, -1, -1];
       if (geometry.color) color = geometry.color;
       const compacted = new Float32Array(1 + 16 + 4 + 1 + numberOfPolygons + numberOfVertices * 3);
@@ -4343,8 +4343,8 @@ var require_toCompactBinary2 = __commonJS({
       compacted[21] = numberOfVertices;
       let ci = 22;
       let vi = ci + numberOfPolygons;
-      polygons.forEach((polygon) => {
-        const points = poly3.toPoints(polygon);
+      polygons.forEach((polygon2) => {
+        const points = poly3.toPoints(polygon2);
         compacted[ci] = points.length;
         ci++;
         for (let i = 0; i < points.length; i++) {
@@ -5730,7 +5730,7 @@ var require_area = __commonJS({
 var require_measureArea2 = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly2/measureArea.js"(exports, module) {
     var area = require_area();
-    var measureArea = (polygon) => area(polygon.vertices);
+    var measureArea = (polygon2) => area(polygon2.vertices);
     module.exports = measureArea;
   }
 });
@@ -5752,8 +5752,8 @@ var require_create10 = __commonJS({
 var require_flip2 = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly2/flip.js"(exports, module) {
     var create = require_create10();
-    var flip = (polygon) => {
-      const vertices = polygon.vertices.slice().reverse();
+    var flip = (polygon2) => {
+      const vertices = polygon2.vertices.slice().reverse();
       return create(vertices);
     };
     module.exports = flip;
@@ -5765,22 +5765,22 @@ var require_arePointsInside = __commonJS({
   "node_modules/@jscad/modeling/src/geometries/poly2/arePointsInside.js"(exports, module) {
     var measureArea = require_measureArea2();
     var flip = require_flip2();
-    var arePointsInside = (points, polygon) => {
+    var arePointsInside = (points, polygon2) => {
       if (points.length === 0) return 0;
-      const vertices = polygon.vertices;
+      const vertices = polygon2.vertices;
       if (vertices.length < 3) return 0;
-      if (measureArea(polygon) < 0) {
-        polygon = flip(polygon);
+      if (measureArea(polygon2) < 0) {
+        polygon2 = flip(polygon2);
       }
       const sum = points.reduce((acc, point) => acc + isPointInside(point, vertices), 0);
       return sum === points.length ? 1 : 0;
     };
-    var isPointInside = (point, polygon) => {
-      const numverts = polygon.length;
+    var isPointInside = (point, polygon2) => {
+      const numverts = polygon2.length;
       const tx = point[0];
       const ty = point[1];
-      let vtx0 = polygon[numverts - 1];
-      let vtx1 = polygon[0];
+      let vtx0 = polygon2[numverts - 1];
+      let vtx1 = polygon2[0];
       let yflag0 = vtx0[1] > ty;
       let insideFlag = 0;
       let i = 0;
@@ -5799,7 +5799,7 @@ var require_arePointsInside = __commonJS({
         }
         yflag0 = yflag1;
         vtx0 = vtx1;
-        vtx1 = polygon[++i];
+        vtx1 = polygon2[++i];
       }
       return insideFlag;
     };
@@ -6437,7 +6437,7 @@ var require_measureArea3 = __commonJS({
       let area = cache.get(geometry);
       if (area) return area;
       const polygons = geom3.toPolygons(geometry);
-      area = polygons.reduce((area2, polygon) => area2 + poly3.measureArea(polygon), 0);
+      area = polygons.reduce((area2, polygon2) => area2 + poly3.measureArea(polygon2), 0);
       cache.set(geometry, area);
       return area;
     };
@@ -6538,8 +6538,8 @@ var require_measureBoundingBox2 = __commonJS({
         vec3.copy(minpoint, points[0]);
       }
       let maxpoint = vec3.clone(minpoint);
-      polygons.forEach((polygon) => {
-        poly3.toPoints(polygon).forEach((point) => {
+      polygons.forEach((polygon2) => {
+        poly3.toPoints(polygon2).forEach((point) => {
           vec3.min(minpoint, minpoint, point);
           vec3.max(maxpoint, maxpoint, point);
         });
@@ -6642,7 +6642,7 @@ var require_measureVolume = __commonJS({
       let volume = cache.get(geometry);
       if (volume) return volume;
       const polygons = geom3.toPolygons(geometry);
-      volume = polygons.reduce((volume2, polygon) => volume2 + poly3.measureSignedVolume(polygon), 0);
+      volume = polygons.reduce((volume2, polygon2) => volume2 + poly3.measureSignedVolume(polygon2), 0);
       cache.set(geometry, volume);
       return volume;
     };
@@ -6745,15 +6745,15 @@ var require_measureBoundingSphere2 = __commonJS({
       const polygons = geom3.toPolygons(geometry);
       if (polygons.length > 0) {
         let numPoints = 0;
-        polygons.forEach((polygon) => {
-          poly3.toPoints(polygon).forEach((point) => {
+        polygons.forEach((polygon2) => {
+          poly3.toPoints(polygon2).forEach((point) => {
             vec3.add(centroid, centroid, point);
             numPoints++;
           });
         });
         vec3.scale(centroid, centroid, 1 / numPoints);
-        polygons.forEach((polygon) => {
-          poly3.toPoints(polygon).forEach((point) => {
+        polygons.forEach((polygon2) => {
+          poly3.toPoints(polygon2).forEach((point) => {
             radius = Math.max(radius, vec3.squaredDistance(centroid, point));
           });
         });
@@ -6839,8 +6839,8 @@ var require_measureCenterOfMass = __commonJS({
       if (polygons.length === 0) return centerOfMass;
       let totalVolume = 0;
       const vector = vec3.create();
-      polygons.forEach((polygon) => {
-        const vertices = polygon.vertices;
+      polygons.forEach((polygon2) => {
+        const vertices = polygon2.vertices;
         for (let i = 0; i < vertices.length - 2; i++) {
           vec3.cross(vector, vertices[i + 1], vertices[i + 2]);
           const volume = vec3.dot(vertices[0], vector) / 6;
@@ -7408,9 +7408,9 @@ var require_polyhedron = __commonJS({
         faces.forEach((face) => face.reverse());
       }
       const polygons = faces.map((face, findex) => {
-        const polygon = poly3.create(face.map((pindex) => points[pindex]));
-        if (colors && colors[findex]) polygon.color = colors[findex];
-        return polygon;
+        const polygon2 = poly3.create(face.map((pindex) => points[pindex]));
+        if (colors && colors[findex]) polygon2.color = colors[findex];
+        return polygon2;
       });
       return geom3.create(polygons);
     };
@@ -7560,7 +7560,7 @@ var require_line = __commonJS({
 var require_polygon = __commonJS({
   "node_modules/@jscad/modeling/src/primitives/polygon.js"(exports, module) {
     var geom2 = require_geom2();
-    var polygon = (options) => {
+    var polygon2 = (options) => {
       const defaults = {
         points: [],
         paths: [],
@@ -7601,7 +7601,7 @@ var require_polygon = __commonJS({
       }
       return geometry;
     };
-    module.exports = polygon;
+    module.exports = polygon2;
   }
 });
 
@@ -9239,7 +9239,7 @@ var require_translate2 = __commonJS({
     var geom2 = require_geom2();
     var geom3 = require_geom3();
     var path2 = require_path2();
-    var translate2 = (offset, ...objects) => {
+    var translate3 = (offset, ...objects) => {
       if (!Array.isArray(offset)) throw new Error("offset must be an array");
       objects = flatten2(objects);
       if (objects.length === 0) throw new Error("wrong number of arguments");
@@ -9254,11 +9254,11 @@ var require_translate2 = __commonJS({
       });
       return results.length === 1 ? results[0] : results;
     };
-    var translateX = (offset, ...objects) => translate2([offset, 0, 0], objects);
-    var translateY = (offset, ...objects) => translate2([0, offset, 0], objects);
-    var translateZ = (offset, ...objects) => translate2([0, 0, offset], objects);
+    var translateX = (offset, ...objects) => translate3([offset, 0, 0], objects);
+    var translateY = (offset, ...objects) => translate3([0, offset, 0], objects);
+    var translateZ = (offset, ...objects) => translate3([0, 0, offset], objects);
     module.exports = {
-      translate: translate2,
+      translate: translate3,
       translateX,
       translateY,
       translateZ
@@ -9272,7 +9272,7 @@ var require_torus = __commonJS({
     var { TAU } = require_constants();
     var extrudeRotate = require_extrudeRotate();
     var { rotate } = require_rotate3();
-    var { translate: translate2 } = require_translate2();
+    var { translate: translate3 } = require_translate2();
     var circle = require_circle();
     var { isGT, isGTE } = require_commonChecks();
     var torus = (options) => {
@@ -9297,7 +9297,7 @@ var require_torus = __commonJS({
       if (innerRotation !== 0) {
         innerCircle = rotate([0, 0, innerRotation], innerCircle);
       }
-      innerCircle = translate2([outerRadius, 0], innerCircle);
+      innerCircle = translate3([outerRadius, 0], innerCircle);
       const extrudeOptions = {
         startAngle,
         angle: outerRotation,
@@ -9820,12 +9820,12 @@ var require_fromFakePolygons = __commonJS({
   "node_modules/@jscad/modeling/src/operations/booleans/fromFakePolygons.js"(exports, module) {
     var vec2 = require_vec2();
     var geom2 = require_geom2();
-    var fromFakePolygon = (epsilon, polygon) => {
-      if (polygon.vertices.length < 4) {
+    var fromFakePolygon = (epsilon, polygon2) => {
+      if (polygon2.vertices.length < 4) {
         return null;
       }
       const vert1Indices = [];
-      const points3D = polygon.vertices.filter((vertex2, i) => {
+      const points3D = polygon2.vertices.filter((vertex2, i) => {
         if (vertex2[2] > 0) {
           vert1Indices.push(i);
           return true;
@@ -9852,7 +9852,7 @@ var require_fromFakePolygons = __commonJS({
       return points2D;
     };
     var fromFakePolygons = (epsilon, polygons) => {
-      const sides = polygons.map((polygon) => fromFakePolygon(epsilon, polygon)).filter((polygon) => polygon !== null);
+      const sides = polygons.map((polygon2) => fromFakePolygon(epsilon, polygon2)).filter((polygon2) => polygon2 !== null);
       return geom2.create(sides);
     };
     module.exports = fromFakePolygons;
@@ -10210,8 +10210,8 @@ var require_reTesselateCoplanarPolygons = __commonJS({
               prevpolygon.outpolygon.leftpoints.reverse();
               const points2d = prevpolygon.outpolygon.rightpoints.concat(prevpolygon.outpolygon.leftpoints);
               const vertices3d = points2d.map((point2d) => orthobasis.to3D(point2d));
-              const polygon = poly3.fromPointsAndPlane(vertices3d, plane);
-              if (polygon.vertices.length) destpolygons.push(polygon);
+              const polygon2 = poly3.fromPointsAndPlane(vertices3d, plane);
+              if (polygon2.vertices.length) destpolygons.push(polygon2);
             }
           }
         }
@@ -10254,7 +10254,7 @@ var require_retessellate = __commonJS({
       if (geometry.isRetesselated) {
         return geometry;
       }
-      const polygons = geom3.toPolygons(geometry).map((polygon, index) => ({ vertices: polygon.vertices, plane: poly3.plane(polygon), index }));
+      const polygons = geom3.toPolygons(geometry).map((polygon2, index) => ({ vertices: polygon2.vertices, plane: poly3.plane(polygon2), index }));
       const classified = classifyPolygons(polygons);
       const destPolygons = [];
       classified.forEach((group2) => {
@@ -10302,8 +10302,8 @@ var require_retessellate = __commonJS({
       clusters.forEach((cluster) => {
         if (cluster[0]) result[cluster[0].index] = cluster;
       });
-      nonCoplanar.forEach((polygon) => {
-        result[polygon.index] = polygon;
+      nonCoplanar.forEach((polygon2) => {
+        result[polygon2.index] = polygon2;
       });
       return result;
     };
@@ -10504,15 +10504,15 @@ var require_splitPolygonByPlane = __commonJS({
       }
       return result;
     };
-    var splitPolygonByPlane = (splane, polygon) => {
+    var splitPolygonByPlane = (splane, polygon2) => {
       const result = {
         type: null,
         front: null,
         back: null
       };
-      const vertices = polygon.vertices;
+      const vertices = polygon2.vertices;
       const numvertices = vertices.length;
-      const pplane = poly3.plane(polygon);
+      const pplane = poly3.plane(polygon2);
       if (plane.equals(pplane, splane)) {
         result.type = 0;
       } else {
@@ -10594,10 +10594,10 @@ var require_PolygonTreeNode = __commonJS({
     var splitPolygonByPlane = require_splitPolygonByPlane();
     var PolygonTreeNode = class _PolygonTreeNode {
       // constructor creates the root node
-      constructor(parent, polygon) {
+      constructor(parent, polygon2) {
         this.parent = parent;
         this.children = [];
-        this.polygon = polygon;
+        this.polygon = polygon2;
         this.removed = false;
       }
       // fill the tree with polygons. Should be called on the root node only; child nodes must
@@ -10607,8 +10607,8 @@ var require_PolygonTreeNode = __commonJS({
           throw new Error("Assertion failed");
         }
         const _this = this;
-        polygons.forEach((polygon) => {
-          _this.addChild(polygon);
+        polygons.forEach((polygon2) => {
+          _this.addChild(polygon2);
         });
       }
       // remove a node
@@ -10688,9 +10688,9 @@ var require_PolygonTreeNode = __commonJS({
       }
       // only to be called for nodes with no children
       _splitByPlane(splane, coplanarfrontnodes, coplanarbacknodes, frontnodes, backnodes) {
-        const polygon = this.polygon;
-        if (polygon) {
-          const bound = poly3.measureBoundingSphere(polygon);
+        const polygon2 = this.polygon;
+        if (polygon2) {
+          const bound = poly3.measureBoundingSphere(polygon2);
           const sphereradius = bound[3] + EPS;
           const spherecenter = bound;
           const d = vec3.dot(splane, spherecenter) - splane[3];
@@ -10699,7 +10699,7 @@ var require_PolygonTreeNode = __commonJS({
           } else if (d < -sphereradius) {
             backnodes.push(this);
           } else {
-            const splitresult = splitPolygonByPlane(splane, polygon);
+            const splitresult = splitPolygonByPlane(splane, polygon2);
             switch (splitresult.type) {
               case 0:
                 coplanarfrontnodes.push(this);
@@ -10732,8 +10732,8 @@ var require_PolygonTreeNode = __commonJS({
       // this should be called whenever the polygon is split
       // a child should be created for every fragment of the split polygon
       // returns the newly created child
-      addChild(polygon) {
-        const newchild = new _PolygonTreeNode(this, polygon);
+      addChild(polygon2) {
+        const newchild = new _PolygonTreeNode(this, polygon2);
         this.children.push(newchild);
         return newchild;
       }
@@ -11065,8 +11065,8 @@ var require_minkowskiSum = __commonJS({
       }
       const tetrahedra = [];
       for (let i = 0; i < polygons.length; i++) {
-        const polygon = polygons[i];
-        const vertices = polygon.vertices;
+        const polygon2 = polygons[i];
+        const vertices = polygon2.vertices;
         let cx = 0, cy = 0, cz = 0;
         for (let k = 0; k < vertices.length; k++) {
           cx += vertices[k][0];
@@ -11076,7 +11076,7 @@ var require_minkowskiSum = __commonJS({
         cx /= vertices.length;
         cy /= vertices.length;
         cz /= vertices.length;
-        const plane = poly3.plane(polygon);
+        const plane = poly3.plane(polygon2);
         const nx = plane[0], ny = plane[1], nz = plane[2];
         const offset = 0.1;
         const apex = [
@@ -11132,9 +11132,9 @@ var require_minkowskiSum = __commonJS({
         const vertices = polygons[i].vertices;
         for (let j = 0; j < vertices.length; j++) {
           const v = vertices[j];
-          const key2 = `${v[0]},${v[1]},${v[2]}`;
-          if (!found.has(key2)) {
-            found.add(key2);
+          const key = `${v[0]},${v[1]},${v[2]}`;
+          if (!found.has(key)) {
+            found.add(key);
             unique.push(v);
           }
         }
@@ -11153,17 +11153,17 @@ var require_scissionGeom3 = __commonJS({
     var geom3 = require_geom3();
     var sortNb = (array) => array.sort((a, b) => a - b).filter((item, pos, ary) => !pos || item !== ary[pos - 1]);
     var insertMapping = (map, point, index) => {
-      const key2 = `${point}`;
-      const mapping = map.get(key2);
+      const key = `${point}`;
+      const mapping = map.get(key);
       if (mapping === void 0) {
-        map.set(key2, [index]);
+        map.set(key, [index]);
       } else {
         mapping.push(index);
       }
     };
     var findMapping = (map, point) => {
-      const key2 = `${point}`;
-      return map.get(key2);
+      const key = `${point}`;
+      return map.get(key);
     };
     var scissionGeom3 = (geometry) => {
       const eps = measureEpsilon(geometry);
@@ -11171,14 +11171,14 @@ var require_scissionGeom3 = __commonJS({
       const pl = polygons.length;
       const indexesPerPoint = /* @__PURE__ */ new Map();
       const temp = vec3.create();
-      polygons.forEach((polygon, index) => {
-        polygon.vertices.forEach((point) => {
+      polygons.forEach((polygon2, index) => {
+        polygon2.vertices.forEach((point) => {
           insertMapping(indexesPerPoint, vec3.snap(temp, point, eps), index);
         });
       });
-      const indexesPerPolygon = polygons.map((polygon) => {
+      const indexesPerPolygon = polygons.map((polygon2) => {
         let indexes = [];
-        polygon.vertices.forEach((point) => {
+        polygon2.vertices.forEach((point) => {
           indexes = indexes.concat(findMapping(indexesPerPoint, vec3.snap(temp, point, eps)));
         });
         return { e: 1, d: sortNb(indexes) };
@@ -11595,24 +11595,24 @@ var require_expandShell = __commonJS({
     var unionGeom3Sub = require_unionGeom3Sub();
     var extrudePolygon = require_extrudePolygon();
     var mapPlaneToVertex = (map, vertex2, plane) => {
-      const key2 = vertex2.toString();
-      if (!map.has(key2)) {
+      const key = vertex2.toString();
+      if (!map.has(key)) {
         const entry = [vertex2, [plane]];
-        map.set(key2, entry);
+        map.set(key, entry);
       } else {
-        const planes = map.get(key2)[1];
+        const planes = map.get(key)[1];
         planes.push(plane);
       }
     };
     var mapPlaneToEdge = (map, edge, plane) => {
       const key0 = edge[0].toString();
       const key1 = edge[1].toString();
-      const key2 = key0 < key1 ? `${key0},${key1}` : `${key1},${key0}`;
-      if (!map.has(key2)) {
+      const key = key0 < key1 ? `${key0},${key1}` : `${key1},${key0}`;
+      if (!map.has(key)) {
         const entry = [edge, [plane]];
-        map.set(key2, entry);
+        map.set(key, entry);
       } else {
-        const planes = map.get(key2)[1];
+        const planes = map.get(key)[1];
         planes.push(plane);
       }
     };
@@ -11634,17 +11634,17 @@ var require_expandShell = __commonJS({
       const v1 = vec3.create();
       const v2 = vec3.create();
       const polygons = geom3.toPolygons(geometry);
-      polygons.forEach((polygon, index) => {
-        const extrudevector = vec3.scale(vec3.create(), poly3.plane(polygon), 2 * delta);
-        const translatedpolygon = poly3.transform(mat4.fromTranslation(mat4.create(), vec3.scale(vec3.create(), extrudevector, -0.5)), polygon);
+      polygons.forEach((polygon2, index) => {
+        const extrudevector = vec3.scale(vec3.create(), poly3.plane(polygon2), 2 * delta);
+        const translatedpolygon = poly3.transform(mat4.fromTranslation(mat4.create(), vec3.scale(vec3.create(), extrudevector, -0.5)), polygon2);
         const extrudedface = extrudePolygon(extrudevector, translatedpolygon);
         result = unionGeom3Sub(result, extrudedface);
-        const vertices = polygon.vertices;
+        const vertices = polygon2.vertices;
         for (let i = 0; i < vertices.length; i++) {
-          mapPlaneToVertex(vertices2planes, vertices[i], poly3.plane(polygon));
+          mapPlaneToVertex(vertices2planes, vertices[i], poly3.plane(polygon2));
           const j = (i + 1) % vertices.length;
           const edge = [vertices[i], vertices[j]];
-          mapPlaneToEdge(edges2planes, edge, poly3.plane(polygon));
+          mapPlaneToEdge(edges2planes, edge, poly3.plane(polygon2));
         }
       });
       edges2planes.forEach((item) => {
@@ -11698,8 +11698,8 @@ var require_expandShell = __commonJS({
               startfacevertices.push(p1);
               endfacevertices.push(p2);
               const points = [prevp2, p2, p1, prevp1];
-              const polygon = poly3.create(points);
-              polygons2.push(polygon);
+              const polygon2 = poly3.create(points);
+              polygons2.push(polygon2);
             }
             prevp1 = p1;
             prevp2 = p2;
@@ -11897,7 +11897,7 @@ var require_offsetGeom2 = __commonJS({
       }
       const outlines = geom2.toOutlines(geometry);
       const newoutlines = outlines.map((outline) => {
-        const level = outlines.reduce((acc, polygon) => acc + poly2.arePointsInside(outline, poly2.create(polygon)), 0);
+        const level = outlines.reduce((acc, polygon2) => acc + poly2.arePointsInside(outline, poly2.create(polygon2)), 0);
         const outside = level % 2 === 0;
         options = {
           delta: outside ? delta : -delta,
@@ -12039,7 +12039,7 @@ var require_extrudeLinear = __commonJS({
     var path2 = require_path2();
     var extrudeLinearGeom2 = require_extrudeLinearGeom2();
     var extrudeLinearPath2 = require_extrudeLinearPath2();
-    var extrudeLinear = (options, ...objects) => {
+    var extrudeLinear2 = (options, ...objects) => {
       const defaults = {
         height: 1,
         twistAngle: 0,
@@ -12057,7 +12057,7 @@ var require_extrudeLinear = __commonJS({
       });
       return results.length === 1 ? results[0] : results;
     };
-    module.exports = extrudeLinear;
+    module.exports = extrudeLinear2;
   }
 });
 
@@ -12336,10 +12336,10 @@ var require_toUniquePoints = __commonJS({
       const found = /* @__PURE__ */ new Set();
       const uniquePoints = [];
       const addPoint = (point) => {
-        const key2 = point.toString();
-        if (!found.has(key2)) {
+        const key = point.toString();
+        if (!found.has(key)) {
           uniquePoints.push(point);
-          found.add(key2);
+          found.add(key);
         }
       };
       geometries.forEach((geometry) => {
@@ -12481,24 +12481,24 @@ var require_snapPolygons = __commonJS({
   "node_modules/@jscad/modeling/src/operations/modifiers/snapPolygons.js"(exports, module) {
     var vec3 = require_vec3();
     var poly3 = require_poly3();
-    var isValidPoly3 = (epsilon, polygon) => {
-      const area = Math.abs(poly3.measureArea(polygon));
+    var isValidPoly3 = (epsilon, polygon2) => {
+      const area = Math.abs(poly3.measureArea(polygon2));
       return Number.isFinite(area) && area > epsilon;
     };
     var snapPolygons = (epsilon, polygons) => {
-      let newpolygons = polygons.map((polygon) => {
-        const snapvertices = polygon.vertices.map((vertice) => vec3.snap(vec3.create(), vertice, epsilon));
+      let newpolygons = polygons.map((polygon2) => {
+        const snapvertices = polygon2.vertices.map((vertice) => vec3.snap(vec3.create(), vertice, epsilon));
         const newvertices = [];
         for (let i = 0; i < snapvertices.length; i++) {
           const j = (i + 1) % snapvertices.length;
           if (!vec3.equals(snapvertices[i], snapvertices[j])) newvertices.push(snapvertices[i]);
         }
         const newpolygon = poly3.create(newvertices);
-        if (polygon.color) newpolygon.color = polygon.color;
+        if (polygon2.color) newpolygon.color = polygon2.color;
         return newpolygon;
       });
       const epsilonArea = epsilon * epsilon * Math.sqrt(3) / 4;
-      newpolygons = newpolygons.filter((polygon) => isValidPoly3(epsilonArea, polygon));
+      newpolygons = newpolygons.filter((polygon2) => isValidPoly3(epsilonArea, polygon2));
       return newpolygons;
     };
     module.exports = snapPolygons;
@@ -12511,8 +12511,8 @@ var require_mergePolygons = __commonJS({
     var aboutEqualNormals = require_aboutEqualNormals();
     var vec3 = require_vec3();
     var poly3 = require_poly3();
-    var createEdges = (polygon) => {
-      const points = poly3.toPoints(polygon);
+    var createEdges = (polygon2) => {
+      const points = poly3.toPoints(polygon2);
       const edges = [];
       for (let i = 0; i < points.length; i++) {
         const j = (i + 1) % points.length;
@@ -12530,16 +12530,16 @@ var require_mergePolygons = __commonJS({
       return edges;
     };
     var insertEdge = (edges, edge) => {
-      const key2 = `${edge.v1}:${edge.v2}`;
-      edges.set(key2, edge);
+      const key = `${edge.v1}:${edge.v2}`;
+      edges.set(key, edge);
     };
     var deleteEdge = (edges, edge) => {
-      const key2 = `${edge.v1}:${edge.v2}`;
-      edges.delete(key2);
+      const key = `${edge.v1}:${edge.v2}`;
+      edges.delete(key);
     };
     var findOppositeEdge = (edges, edge) => {
-      const key2 = `${edge.v2}:${edge.v1}`;
-      return edges.get(key2);
+      const key = `${edge.v2}:${edge.v1}`;
+      return edges.get(key);
     };
     var calculateAnglesBetween = (current2, opposite, normal) => {
       let v0 = current2.prev.v1;
@@ -12561,7 +12561,7 @@ var require_mergePolygons = __commonJS({
       return vec3.dot(d0, normal);
     };
     var createPolygonAnd = (edge) => {
-      let polygon;
+      let polygon2;
       const points = [];
       while (edge.next) {
         const next = edge.next;
@@ -12572,8 +12572,8 @@ var require_mergePolygons = __commonJS({
         edge.prev = null;
         edge = next;
       }
-      if (points.length > 0) polygon = poly3.create(points);
-      return polygon;
+      if (points.length > 0) polygon2 = poly3.create(points);
+      return polygon2;
     };
     var mergeCoplanarPolygons = (sourcepolygons) => {
       if (sourcepolygons.length < 2) return sourcepolygons;
@@ -12581,8 +12581,8 @@ var require_mergePolygons = __commonJS({
       const polygons = sourcepolygons.slice();
       const edgeList = /* @__PURE__ */ new Map();
       while (polygons.length > 0) {
-        const polygon = polygons.shift();
-        const edges = createEdges(polygon);
+        const polygon2 = polygons.shift();
+        const edges = createEdges(polygon2);
         for (let i = 0; i < edges.length; i++) {
           const current2 = edges[i];
           const opposite = findOppositeEdge(edgeList, current2);
@@ -12638,8 +12638,8 @@ var require_mergePolygons = __commonJS({
       }
       const destpolygons = [];
       edgeList.forEach((edge) => {
-        const polygon = createPolygonAnd(edge);
-        if (polygon) destpolygons.push(polygon);
+        const polygon2 = createPolygonAnd(edge);
+        if (polygon2) destpolygons.push(polygon2);
       });
       edgeList.clear();
       return destpolygons;
@@ -12652,13 +12652,13 @@ var require_mergePolygons = __commonJS({
     };
     var mergePolygons = (epsilon, polygons) => {
       const polygonsPerPlane = [];
-      polygons.forEach((polygon) => {
-        const mapping = polygonsPerPlane.find((element) => coplanar(element[0], poly3.plane(polygon)));
+      polygons.forEach((polygon2) => {
+        const mapping = polygonsPerPlane.find((element) => coplanar(element[0], poly3.plane(polygon2)));
         if (mapping) {
           const polygons2 = mapping[1];
-          polygons2.push(polygon);
+          polygons2.push(polygon2);
         } else {
-          polygonsPerPlane.push([poly3.plane(polygon), [polygon]]);
+          polygonsPerPlane.push([poly3.plane(polygon2), [polygon2]]);
         }
       });
       let destpolygons = [];
@@ -12753,15 +12753,15 @@ var require_insertTjunctions = __commonJS({
     var insertTjunctions = (polygons) => {
       const sidemap = /* @__PURE__ */ new Map();
       for (let polygonindex = 0; polygonindex < polygons.length; polygonindex++) {
-        const polygon = polygons[polygonindex];
-        const numvertices = polygon.vertices.length;
+        const polygon2 = polygons[polygonindex];
+        const numvertices = polygon2.vertices.length;
         if (numvertices >= 3) {
-          let vertex2 = polygon.vertices[0];
+          let vertex2 = polygon2.vertices[0];
           let vertextag = getTag(vertex2);
           for (let vertexindex = 0; vertexindex < numvertices; vertexindex++) {
             let nextvertexindex = vertexindex + 1;
             if (nextvertexindex === numvertices) nextvertexindex = 0;
-            const nextvertex = polygon.vertices[nextvertexindex];
+            const nextvertex = polygon2.vertices[nextvertexindex];
             const nextvertextag = getTag(nextvertex);
             const sidetag = `${vertextag}/${nextvertextag}`;
             const reversesidetag = `${nextvertextag}/${vertextag}`;
@@ -12869,17 +12869,17 @@ var require_insertTjunctions = __commonJS({
                       const distancesquared = vec3.squaredDistance(closestpoint, endpos);
                       if (distancesquared < constants.EPS * constants.EPS) {
                         const polygonindex = matchingside.polygonindex;
-                        const polygon = newpolygons[polygonindex];
+                        const polygon2 = newpolygons[polygonindex];
                         const insertionvertextag = getTag(matchingside.vertex1);
                         let insertionvertextagindex = -1;
-                        for (let i = 0; i < polygon.vertices.length; i++) {
-                          if (getTag(polygon.vertices[i]) === insertionvertextag) {
+                        for (let i = 0; i < polygon2.vertices.length; i++) {
+                          if (getTag(polygon2.vertices[i]) === insertionvertextag) {
                             insertionvertextagindex = i;
                             break;
                           }
                         }
                         if (assert && insertionvertextagindex < 0) throw new Error("assert failed");
-                        const newvertices = polygon.vertices.slice(0);
+                        const newvertices = polygon2.vertices.slice(0);
                         newvertices.splice(insertionvertextagindex, 0, endvertex);
                         const newpolygon = poly3.create(newvertices);
                         newpolygons[polygonindex] = newpolygon;
@@ -12918,35 +12918,35 @@ var require_triangulatePolygons = __commonJS({
   "node_modules/@jscad/modeling/src/operations/modifiers/triangulatePolygons.js"(exports, module) {
     var vec3 = require_vec3();
     var poly3 = require_poly3();
-    var triangulatePolygon = (epsilon, polygon, triangles2) => {
-      const nv = polygon.vertices.length;
+    var triangulatePolygon = (epsilon, polygon2, triangles2) => {
+      const nv = polygon2.vertices.length;
       if (nv > 3) {
         if (nv > 4) {
           const midpoint = [0, 0, 0];
-          polygon.vertices.forEach((vertice) => vec3.add(midpoint, midpoint, vertice));
+          polygon2.vertices.forEach((vertice) => vec3.add(midpoint, midpoint, vertice));
           vec3.snap(midpoint, vec3.divide(midpoint, midpoint, [nv, nv, nv]), epsilon);
           for (let i = 0; i < nv; i++) {
-            const poly = poly3.create([midpoint, polygon.vertices[i], polygon.vertices[(i + 1) % nv]]);
-            if (polygon.color) poly.color = polygon.color;
+            const poly = poly3.create([midpoint, polygon2.vertices[i], polygon2.vertices[(i + 1) % nv]]);
+            if (polygon2.color) poly.color = polygon2.color;
             triangles2.push(poly);
           }
           return;
         }
-        const poly0 = poly3.create([polygon.vertices[0], polygon.vertices[1], polygon.vertices[2]]);
-        const poly1 = poly3.create([polygon.vertices[0], polygon.vertices[2], polygon.vertices[3]]);
-        if (polygon.color) {
-          poly0.color = polygon.color;
-          poly1.color = polygon.color;
+        const poly0 = poly3.create([polygon2.vertices[0], polygon2.vertices[1], polygon2.vertices[2]]);
+        const poly1 = poly3.create([polygon2.vertices[0], polygon2.vertices[2], polygon2.vertices[3]]);
+        if (polygon2.color) {
+          poly0.color = polygon2.color;
+          poly1.color = polygon2.color;
         }
         triangles2.push(poly0, poly1);
         return;
       }
-      triangles2.push(polygon);
+      triangles2.push(polygon2);
     };
     var triangulatePolygons = (epsilon, polygons) => {
       const triangles2 = [];
-      polygons.forEach((polygon) => {
-        triangulatePolygon(epsilon, polygon, triangles2);
+      polygons.forEach((polygon2) => {
+        triangulatePolygon(epsilon, polygon2, triangles2);
       });
       return triangles2;
     };
@@ -13081,7 +13081,7 @@ var require_align = __commonJS({
     var flatten2 = require_flatten();
     var padArrayToLength = require_padArrayToLength();
     var measureAggregateBoundingBox = require_measureAggregateBoundingBox();
-    var { translate: translate2 } = require_translate2();
+    var { translate: translate3 } = require_translate2();
     var validateOptions = (options) => {
       if (!Array.isArray(options.modes) || options.modes.length > 3) throw new Error("align(): modes must be an array of length <= 3");
       options.modes = padArrayToLength(options.modes, "none", 3);
@@ -13118,7 +13118,7 @@ var require_align = __commonJS({
           translation[i] = relativeTo[i] - bounds2[0][i];
         }
       }
-      return translate2(translation, geometry);
+      return translate3(translation, geometry);
     };
     var align = (options, ...geometries) => {
       const defaults = {
@@ -13154,7 +13154,7 @@ var require_center = __commonJS({
     var geom3 = require_geom3();
     var path2 = require_path2();
     var measureBoundingBox = require_measureBoundingBox2();
-    var { translate: translate2 } = require_translate2();
+    var { translate: translate3 } = require_translate2();
     var centerGeometry = (options, object) => {
       const defaults = {
         axes: [true, true, true],
@@ -13166,7 +13166,7 @@ var require_center = __commonJS({
       if (axes[0]) offset[0] = relativeTo[0] - (bounds2[0][0] + (bounds2[1][0] - bounds2[0][0]) / 2);
       if (axes[1]) offset[1] = relativeTo[1] - (bounds2[0][1] + (bounds2[1][1] - bounds2[0][1]) / 2);
       if (axes[2]) offset[2] = relativeTo[2] - (bounds2[0][2] + (bounds2[1][2] - bounds2[0][2]) / 2);
-      return translate2(offset, object);
+      return translate3(offset, object);
     };
     var center = (options, ...objects) => {
       const defaults = {
@@ -17064,15 +17064,15 @@ var Texture = class _Texture extends EventDispatcher {
    * @param {Object} values - A container with texture parameters.
    */
   setValues(values) {
-    for (const key2 in values) {
-      const newValue = values[key2];
+    for (const key in values) {
+      const newValue = values[key];
       if (newValue === void 0) {
-        console.warn(`THREE.Texture.setValues(): parameter '${key2}' has value of undefined.`);
+        console.warn(`THREE.Texture.setValues(): parameter '${key}' has value of undefined.`);
         continue;
       }
-      const currentValue = this[key2];
+      const currentValue = this[key];
       if (currentValue === void 0) {
-        console.warn(`THREE.Texture.setValues(): property '${key2}' does not exist.`);
+        console.warn(`THREE.Texture.setValues(): property '${key}' does not exist.`);
         continue;
       }
       if (currentValue && newValue && (currentValue.isVector2 && newValue.isVector2)) {
@@ -17082,7 +17082,7 @@ var Texture = class _Texture extends EventDispatcher {
       } else if (currentValue && newValue && (currentValue.isMatrix3 && newValue.isMatrix3)) {
         currentValue.copy(newValue);
       } else {
-        this[key2] = newValue;
+        this[key] = newValue;
       }
     }
   }
@@ -21739,8 +21739,8 @@ var Object3D = class _Object3D extends EventDispatcher {
     return output;
     function extractFromCache(cache) {
       const values = [];
-      for (const key2 in cache) {
-        const data = cache[key2];
+      for (const key in cache) {
+        const data = cache[key];
         delete data.metadata;
         values.push(data);
       }
@@ -23044,15 +23044,15 @@ var Material = class extends EventDispatcher {
    */
   setValues(values) {
     if (values === void 0) return;
-    for (const key2 in values) {
-      const newValue = values[key2];
+    for (const key in values) {
+      const newValue = values[key];
       if (newValue === void 0) {
-        console.warn(`THREE.Material: parameter '${key2}' has value of undefined.`);
+        console.warn(`THREE.Material: parameter '${key}' has value of undefined.`);
         continue;
       }
-      const currentValue = this[key2];
+      const currentValue = this[key];
       if (currentValue === void 0) {
-        console.warn(`THREE.Material: '${key2}' is not a property of THREE.${this.type}.`);
+        console.warn(`THREE.Material: '${key}' is not a property of THREE.${this.type}.`);
         continue;
       }
       if (currentValue && currentValue.isColor) {
@@ -23060,7 +23060,7 @@ var Material = class extends EventDispatcher {
       } else if (currentValue && currentValue.isVector3 && (newValue && newValue.isVector3)) {
         currentValue.copy(newValue);
       } else {
-        this[key2] = newValue;
+        this[key] = newValue;
       }
     }
   }
@@ -23235,8 +23235,8 @@ var Material = class extends EventDispatcher {
     if (Object.keys(this.userData).length > 0) data.userData = this.userData;
     function extractFromCache(cache) {
       const values = [];
-      for (const key2 in cache) {
-        const data2 = cache[key2];
+      for (const key in cache) {
+        const data2 = cache[key];
         delete data2.metadata;
         values.push(data2);
       }
@@ -24494,8 +24494,8 @@ var BufferGeometry = class _BufferGeometry extends EventDispatcher {
     if (Object.keys(this.userData).length > 0) data.userData = this.userData;
     if (this.parameters !== void 0) {
       const parameters = this.parameters;
-      for (const key2 in parameters) {
-        if (parameters[key2] !== void 0) data[key2] = parameters[key2];
+      for (const key in parameters) {
+        if (parameters[key] !== void 0) data[key] = parameters[key];
       }
       return data;
     }
@@ -24508,21 +24508,21 @@ var BufferGeometry = class _BufferGeometry extends EventDispatcher {
       };
     }
     const attributes = this.attributes;
-    for (const key2 in attributes) {
-      const attribute = attributes[key2];
-      data.data.attributes[key2] = attribute.toJSON(data.data);
+    for (const key in attributes) {
+      const attribute = attributes[key];
+      data.data.attributes[key] = attribute.toJSON(data.data);
     }
     const morphAttributes = {};
     let hasMorphAttributes = false;
-    for (const key2 in this.morphAttributes) {
-      const attributeArray = this.morphAttributes[key2];
+    for (const key in this.morphAttributes) {
+      const attributeArray = this.morphAttributes[key];
       const array = [];
       for (let i = 0, il = attributeArray.length; i < il; i++) {
         const attribute = attributeArray[i];
         array.push(attribute.toJSON(data.data));
       }
       if (array.length > 0) {
-        morphAttributes[key2] = array;
+        morphAttributes[key] = array;
         hasMorphAttributes = true;
       }
     }
@@ -25129,8 +25129,8 @@ var ShaderMaterial = class extends Material {
     data.lights = this.lights;
     data.clipping = this.clipping;
     const extensions = {};
-    for (const key2 in this.extensions) {
-      if (this.extensions[key2] === true) extensions[key2] = true;
+    for (const key in this.extensions) {
+      if (this.extensions[key] === true) extensions[key] = true;
     }
     if (Object.keys(extensions).length > 0) data.extensions = extensions;
     return data;
@@ -27428,9 +27428,9 @@ var EdgesGeometry = class extends BufferGeometry {
           }
         }
       }
-      for (const key2 in edgeData) {
-        if (edgeData[key2]) {
-          const { index0, index1 } = edgeData[key2];
+      for (const key in edgeData) {
+        if (edgeData[key]) {
+          const { index0, index1 } = edgeData[key];
           _v0.fromBufferAttribute(positionAttr, index0);
           _v1$1.fromBufferAttribute(positionAttr, index1);
           vertices.push(_v0.x, _v0.y, _v0.z);
@@ -34297,8 +34297,8 @@ function WebGLProperties() {
   function remove(object) {
     properties.delete(object);
   }
-  function update2(object, key2, value) {
-    properties.get(object)[key2] = value;
+  function update2(object, key, value) {
+    properties.get(object)[key] = value;
   }
   function dispose() {
     properties = /* @__PURE__ */ new WeakMap();
@@ -37372,8 +37372,8 @@ var WebXRManager = class extends EventDispatcher {
       _currentDepthNear = null;
       _currentDepthFar = null;
       depthSensing.reset();
-      for (const key2 in cameraAccessTextures) {
-        delete cameraAccessTextures[key2];
+      for (const key in cameraAccessTextures) {
+        delete cameraAccessTextures[key];
       }
       renderer2.setRenderTarget(initialRenderTarget);
       glBaseLayer = null;
@@ -40647,7 +40647,7 @@ function interceptControlUp(event) {
 }
 
 // src/engine.mjs
-var import_modeling = __toESM(require_src(), 1);
+var import_modeling2 = __toESM(require_src(), 1);
 
 // node_modules/fflate/esm/browser.js
 var u8 = Uint8Array;
@@ -41356,53 +41356,80 @@ function zipSync(data, opts) {
   return out;
 }
 
-// src/engine.mjs
-var { cuboid } = import_modeling.default.primitives;
+// src/mechanics.mjs
+var import_modeling = __toESM(require_src(), 1);
+var { cuboid, polygon } = import_modeling.default.primitives;
 var { union, subtract } = import_modeling.default.booleans;
 var { translate } = import_modeling.default.transforms;
+var { extrudeLinear } = import_modeling.default.extrusions;
 var B = (x, y, z, w, d, h) => translate([x + w / 2, y + d / 2, z + h / 2], cuboid({ size: [w, d, h] }));
-var DEFAULTS = [{ name: "Battleline", w: 32, d: 32, h: 48, count: 2 }, { name: "Dreadnought", w: 65, d: 65, h: 82, count: 1 }];
+var prism = (points, z, h) => translate([0, 0, z], extrudeLinear({ height: h }, polygon({ points })));
+var DEFAULTS = [{ name: "Battleline", w: 32, d: 32, h: 48, count: 5, perUnit: 5, columns: 3, spacing: 2, base: 0 }, { name: "Dreadnought", w: 65, d: 65, h: 82, count: 1, perUnit: 1, columns: 1, spacing: 2, base: 0 }];
 function plan(types2, clearance2 = 0.3) {
   if (!Number.isFinite(clearance2) || clearance2 < 0.15 || clearance2 > 0.6) throw Error("Clearance must be 0.15\u20130.60 mm");
   if (!Array.isArray(types2) || !types2.length) throw Error("Add at least one miniature type");
   const boxes = [];
   let x = 0;
-  let H = 0;
-  for (const t of types2) {
-    if (![t.w, t.d, t.h, t.count].every(Number.isFinite) || Math.min(t.w, t.d, t.h) < 5 || !Number.isInteger(t.count) || t.count < 1 || t.count > 20) throw Error("Dimensions \u22655 mm; quantity 1\u201320 (whole number)");
-    H = Math.max(H, Math.ceil((t.h + 16) / 10) * 10);
+  for (const [type, t] of types2.entries()) {
+    const perUnit = t.perUnit ?? 5, columns = t.columns ?? 0, spacing = t.spacing ?? 2, base = t.base ?? 0;
+    if (![t.w, t.d, t.h, t.count, perUnit, columns, spacing, base].every(Number.isFinite) || Math.min(t.w, t.d, t.h) < 5 || !Number.isInteger(t.count) || t.count < 1 || t.count > 200 || !Number.isInteger(perUnit) || perUnit < 1 || perUnit > 100 || !Number.isInteger(columns) || columns < 0 || columns > 100 || spacing < 2 || spacing > 20 || base < 0 || base + 2.2 > Math.min(t.w, t.d) && base > 0) throw Error("Envelopes \u22655 mm; models 1\u2013200; models/unit 1\u2013100; columns 0=auto; spacing 2\u201320; base pocket must fit envelope");
+    const maxC = Math.floor((241 - 4.8 + spacing) / (t.w + spacing)), maxR = Math.floor((246 - 4.8 + spacing) / (t.d + spacing)), h = Math.max(26, t.h + 8.4);
+    if (maxC < 1 || maxR < 1 || h + 2.7 > 250) throw Error("Miniature exceeds 250 mm part envelope including integral features");
+    let remaining = t.count;
+    while (remaining) {
+      const target = Math.min(perUnit, remaining, maxC * maxR), cols = Math.min(columns || Math.ceil(Math.sqrt(target * t.d / t.w)), maxC, target), n = Math.min(target, cols * maxR), rows = Math.ceil(n / cols), w = Math.max(20, cols * t.w + (cols - 1) * spacing + 4.8), d = Math.max(32, rows * t.d + (rows - 1) * spacing + 4.8), models = [];
+      for (let i = 0; i < n; i++) models.push({ x: 2.4 + i % cols * (t.w + spacing), y: 2.4 + Math.floor(i / cols) * (t.d + spacing), z: 2.4, w: t.w, d: t.d, h: t.h });
+      boxes.push({ id: boxes.length, type, name: t.name || "Miniature", w, d, h, x, y: 0, mini: { w: t.w, d: t.d, h: t.h }, models, columns: cols, rows, base, spacing });
+      x += w + 5;
+      remaining -= n;
+    }
   }
-  if (H + 7 > 250) throw Error("Part exceeds 250 mm Z. Miniature is too large.");
-  for (const [type, t] of types2.entries()) for (let i = 0; i < t.count; i++) {
-    const w = Math.ceil((t.w + 26) / 50) * 50, d = Math.ceil((t.d + 26) / 50) * 50;
-    if (w > 250 || d > 250) throw Error("Part exceeds 250 mm XY. Miniature is too large.");
-    boxes.push({ id: boxes.length, type, name: t.name || "Miniature", w, d, h: H, x, y: 0, mini: { w: t.w, d: t.d, h: t.h } });
-    x += w + 2;
-  }
-  if (boxes.length > 30) throw Error("Maximum 30 boxes per assembly");
-  const joints = boxes.slice(1).map((b, i) => ({ a: i, b: i + 1, x: b.x - 2, y: 25, z: H - 20 }));
-  return { version: 1, clearance: clearance2, pitch: 50, height: H, boxes, joints, width: x - 2, depth: Math.max(...boxes.map((b) => b.d)) };
+  if (boxes.length > 40) throw Error("Maximum 40 units per assembly");
+  return { version: 2, clearance: clearance2, wall: 2.4, floor: 2.4, interfaceZ: 3, boxes, joints: boxes.slice(1).map((b, i) => ({ a: i, b: i + 1, z: 3, x: b.x })), width: x + 4, depth: Math.max(...boxes.map((b) => b.d)) + 4, height: Math.max(...boxes.map((b) => b.h)) + 2.7, modelCount: boxes.reduce((s, b) => s + b.models.length, 0), smallParts: 0 };
 }
-function socket(w, H, right) {
-  const sx = right ? w : 0;
-  return union(B(sx + (right ? -7 : 3), 20, H - 20, 4, 10, 21), B(sx + (right ? -3 : -0.1), 23, H - 20, 3.1, 4, 21));
+function male(b, c) {
+  return prism([[b.w - 0.3, 9], [b.w, 9], [b.w + 4, 6], [b.w + 4, 18], [b.w, 15], [b.w - 0.3, 15]], 3 + c, 14 - c);
+}
+function channel(c) {
+  return prism([[-5.2, 9 - c], [-5, 9 - c], [-1 + c, 6 - c], [-1 + c, 18 + c], [-5, 15 + c], [-5.2, 15 + c]], 3, 300);
+}
+function latchWidth(b) {
+  return Math.min(32, b.w - 8);
+}
+function lidTabs(b) {
+  const { w, d, h } = b, tw = latchWidth(b), sx = (w - tw) / 2;
+  return [union(B(sx, -2, h - 14, tw, 1.6, 14.6), B(sx, -0.5, h - 9.5, tw, 1.3, 2)), union(B(sx, d + 0.4, h - 14, tw, 1.6, 14.6), B(sx, d - 0.8, h - 9.5, tw, 1.3, 2))];
 }
 function body(b, c) {
-  const { w, d, h: H, mini: m } = b;
-  let shell = subtract(B(0, 0, 0, w, d, H), B(10, 10, 4, w - 20, d - 20, H), socket(w, H, true), socket(w, H, false));
-  shell = subtract(shell, B(7, 0, H - 4 - c, w - 14, d - 7, 4 + 2 * c), B(w / 2 - 1.5 - c, 4 - c, H - 10, 3 + 2 * c, 3 + 2 * c, 11));
-  const px = (w - m.w - 2) / 2, py = (d - m.d - 2) / 2;
-  const cradle = subtract(B(px - 2, py - 2, 3, m.w + 6, m.d + 6, 5), B(px, py, 2, m.w + 2, m.d + 2, 8));
-  return union(shell, cradle);
+  const { w, d, h } = b, tw = latchWidth(b), sx = (w - tw) / 2;
+  let shell = union(subtract(B(0, 0, 0, w, d, h), B(2.4, 2.4, 2.4, w - 4.8, d - 4.8, h)), subtract(B(-5, 3, 0, 5.3, 18, 18), channel(c)), male(b, c));
+  shell = subtract(shell, B(sx - c, -0.1, h - 9.5 - c, tw + 2 * c, 1.1 + c, 2 + 2 * c), B(sx - c, d - 1 - c, h - 9.5 - c, tw + 2 * c, 1.1 + c, 2 + 2 * c));
+  const ribs = [];
+  for (const m of b.models) if (b.base > 0) {
+    const k = b.base + 1, cx = m.x + m.w / 2, cy = m.y + m.d / 2;
+    shell = subtract(shell, B(cx - k / 2, cy - k / 2, 1.8, k, k, 0.7));
+  }
+  for (let col = 1; col < b.columns; col++) ribs.push(B(2.4 + col * (b.mini.w + b.spacing) - b.spacing / 2 - 0.4, 2, 2, 0.8, d - 4, 2.4));
+  for (let row = 1; row < b.rows; row++) ribs.push(B(2, 2.4 + row * (b.mini.d + b.spacing) - b.spacing / 2 - 0.4, 2, w - 4, 0.8, 2.4));
+  return ribs.length ? union(shell, ...ribs) : shell;
 }
 function lid(b, c) {
-  return union(B(0, 0, b.h, b.w, b.d, 3), B(7 + c, 0, b.h - 4, b.w - 14 - 2 * c, b.d - 7 - c, 4.2));
+  const { w, d, h } = b;
+  return union(B(0, -2, h + 0.3, w, d + 4, 2.4), ...lidTabs(b), B(2.4 + c, 3, h - 2, 1.2, d - 6, 2.6), B(w - 3.6 - c, 3, h - 2, 1.2, d - 6, 2.6));
 }
-function key(c) {
-  return union(B(-7 + c, -5 + c, 0, 4 - 2 * c, 10 - 2 * c, 19.6), B(5 + c, -5 + c, 0, 4 - 2 * c, 10 - 2 * c, 19.6), B(-3 - c, -2 + c, 0, 8 + 2 * c, 4 - 2 * c, 19.6));
-}
+var INSTRUCTIONS = `# mboxeditor v2 \u2014 two large parts per unit; zero loose small parts
+Prototype: CAD checked, NOT physically printed, fatigue tested or load-rated.
+Each unit holds multiple complete model envelopes separated by low integral ribs. Quantity means MODELS; models/unit is capacity. Partial units shrink. Columns 0=automatic, rows automatic. Excess models split into additional units. Heights independent. Walls/floor 2.4, lid 2.4, spacing >=2. Optional square base pockets use separate base width, not the full model envelope; no immobilization claim.
+Print bodies base-down; lids top-face down (rotate 180 degrees in slicer; exports rebase only). PETG suggested, 0.4 nozzle, 0.2 layers. Inspect supports/overhangs at channels and hooks. Calibrate one pair first. No hardware or separate fasteners.
+Connect front-aligned: next origin X=previous origin+W+5. Lift LEFT/male body above RIGHT/female channel, then lower it vertically until floor stop seats. Channel floor Z=3; male bottom Z=3+c. Interface independent of height. Flared trapezoid captures lateral separation. No vertical body locking: units can lift apart. Support every base.
+Lid is LIFT-ON, not a sliding rail lid. Inner lips locate, not vertically capture. Broad integral front/back cantilever skirts carry inward hooks. Spread BOTH skirts outward approximately 1.5 mm with thumbs during lowering; release only when seated. Hooks rest in recessed wall pockets without CAD interference. Spread skirts and lift to open. Do not force an unflexed lid down. Flexibility, thumb forces, fatigue and creep require real print tests; CAD checks final fit and manually released rigid-component paths, NOT elastic simulation. No automatic snap-in claim: hooks have no lead-in ramp.
+Carry upright WITH TWO HANDS SUPPORTING EVERY BASE. No handle; do not lift by lid, end unit or connector. Not inversion-safe or impact-safe; no vertical miniature restraint. Low ribs organize only. Every part <=250 including protrusions; overall row may be larger. Clearance 0.15\u20130.60 per face is not a strength guarantee. Avoid hot cars.
+`;
+
+// src/engine.mjs
+var { translate: translate2 } = import_modeling2.default.transforms;
 function triangles(solid) {
-  const ps = import_modeling.default.geometries.geom3.toPolygons(import_modeling.default.modifiers.generalize({ snap: true, simplify: true, triangulate: true }, solid));
+  const ps = import_modeling2.default.geometries.geom3.toPolygons(import_modeling2.default.modifiers.generalize({ snap: true, simplify: true, triangulate: true }, solid));
   return ps.flatMap((p) => {
     const a = [];
     for (let i = 1; i < p.vertices.length - 1; i++) a.push([p.vertices[0], p.vertices[i], p.vertices[i + 1]]);
@@ -41410,7 +41437,7 @@ function triangles(solid) {
   });
 }
 function bounds(solid) {
-  const [a, b] = import_modeling.default.measurements.measureBoundingBox(solid);
+  const [a, b] = import_modeling2.default.measurements.measureBoundingBox(solid);
   return b.map((v, i) => +(v - a[i]).toFixed(3));
 }
 function makeParts(p) {
@@ -41428,14 +41455,10 @@ function makeParts(p) {
     part.instances.push({ pose, box });
   };
   for (const b of p.boxes) {
-    const tag = `${b.w}x${b.d}x${b.h}_mini${b.mini.w}x${b.mini.d}`;
+    const tag = `${b.w}x${b.d}x${b.h}_n${b.models.length}_c${b.columns}_m${b.mini.w}x${b.mini.d}_b${b.base}`;
     add(`body_${tag}`, body(b, p.clearance), [b.x, 0, 0], "body", b.id);
-    const l = subtract(lid(b, p.clearance), B(b.w / 2 - 1.5 - p.clearance, 4 - p.clearance, b.h - 5, 3 + 2 * p.clearance, 3 + 2 * p.clearance, 10));
-    add(`lid_${b.w}x${b.d}x${b.h}`, l, [b.x, 0, 0], "lid", b.id);
-    const pin = union(B(-1.5, -1.5, 0, 3, 3, 12), B(-3, -3, 11.8, 6, 6, 2));
-    add("lid_lock_pin", pin, [b.x + b.w / 2, 5.5, b.h - 8.8], "pin", b.id);
+    add(`lid_${b.w}x${b.d}x${b.h}`, lid(b, p.clearance), [b.x, 0, 0], "lid", b.id);
   }
-  for (const j of p.joints) add("bridge_T_key", key(p.clearance), [j.x, j.y, j.z], "key", null);
   return out;
 }
 function stl(solid) {
@@ -41458,8 +41481,8 @@ function exportZip(p, parts2 = makeParts(p)) {
   const bom = parts2.map(({ name, qty, size, role }) => ({ file: name + ".stl", quantity: qty, bounds_mm: size, role }));
   for (const a of parts2) {
     let solid = a.solid;
-    const [min] = import_modeling.default.measurements.measureBoundingBox(solid);
-    solid = translate(min.map((v) => -v), solid);
+    const [min] = import_modeling2.default.measurements.measureBoundingBox(solid);
+    solid = translate2(min.map((v) => -v), solid);
     files[a.name + ".stl"] = stl(solid);
   }
   files["BOM.json"] = strToU8(JSON.stringify(bom, null, 2));
@@ -41468,16 +41491,6 @@ function exportZip(p, parts2 = makeParts(p)) {
   files["assembly.md"] = strToU8(INSTRUCTIONS);
   return zipSync(files, { level: 6 });
 }
-var INSTRUCTIONS = `# mboxeditor \xB7 assembly / \u7D44\u88DD
-All dimensions mm. Prototype, not load-rated or physically tested.
-1. Print bodies upright flat base down. Print lids top-face down (rotate 180 degrees); tongues face up. Keys upright, pins head-down. No purchased hardware. Suggested 0.4 mm nozzle, 0.2 mm layers, 5 perimeters, 30% infill, PETG. Socket overhangs and lid grooves may require removable supports. Test fit a body/key pair before batch printing.
-2. Place bodies in numbered row, front edges aligned, exactly 2 mm between walls. Socket centres are 25 mm from front; heights common to all boxes.
-3. Drop each double-T bridge into opposing side slots until its bottom seats, 20 mm below body top. Head overlaps the throat by at least 1.4 mm on each side; this resists separation.
-4. Place miniature flat base inside its fixed rectangular cradle. Pocket is W+2 by D+2. Cradle only limits sideways base movement; no vertical clamping. Input full miniature envelope, not only base diameter. Fragile/tall models need independent physical restraint validation.
-5. Slide each lid from the front (y=0), tongues in side grooves, until flush at back. Broad top covers bridge openings. Insert headed lock pin down through lid into front wall; it blocks lid sliding. Remove pins, slide lids out, then lift keys to dismantle.
-6. Carry upright WITH TWO HANDS SUPPORTING ALL BOX BASES. There is no load-bearing handle. Bridges align the kit, not a certified suspended load. Do not lift by a lid, end box or connector. Not inversion-safe: loose pins can withdraw and models can bounce.
-Tolerances: adjustable 0.15\u20130.60 mm per mating face, default 0.30. Socket head 4x10, throat 3x4, depth 20; key height 19.6. Pitch XY 50, gap 2; common body height rounded up 10 mm from tallest model +16. Walls nominal 10, floor 4, lid 3. Lid top extends 3 above body, lock head 5 above. Every exported part \u2264250 in XYZ; assembly can be larger. No scaling. PLA creeps in heat; PETG also creeps. Print anisotropy, impact, layer adhesion and actual fit/load capacity untested. Do not leave in hot cars.
-`;
 
 // src/app.mjs
 var $ = (s) => document.querySelector(s);
@@ -41491,7 +41504,7 @@ var camera;
 var controls;
 var group;
 try {
-  const saved = JSON.parse(localStorage.getItem("mboxeditor.v1"));
+  const saved = JSON.parse(localStorage.getItem("mboxeditor.v2"));
   if (saved) {
     types = saved.types;
     clearance = saved.clearance;
@@ -41505,7 +41518,7 @@ function cards() {
   types.forEach((t, i) => {
     const el = document.createElement("div");
     el.className = "type";
-    el.innerHTML = '<div class="typehead"><input aria-label="Model name"><button class="remove" aria-label="Remove type">\xD7</button></div><div class="fields">' + [["w", "\u95CA W"], ["d", "\u6DF1 D"], ["h", "\u9AD8 H"], ["count", "\u6578\u91CF"]].map(([key2, label]) => `<label>${label}<input type="number" min="${key2 === "count" ? 1 : 5}" step="1" data-key="${key2}" aria-label="${label}"></label>`).join("") + "</div>";
+    el.innerHTML = '<div class="typehead"><input aria-label="Model name"><button class="remove" aria-label="Remove type">\xD7</button></div><div class="fields">' + [["w", "\u95CA W"], ["d", "\u6DF1 D"], ["h", "\u9AD8 H"], ["count", "\u6A21\u578B\u7E3D\u6578 Models"], ["perUnit", "\u6BCF\u76D2\u6A21\u578B Models/unit"], ["columns", "\u5217 Columns (0=auto)"], ["spacing", "\u9593\u8DDD Spacing"], ["base", "\u5E95\u5EA7\u95CA Base (0=none)"]].map(([key, label]) => `<label>${label}<input type="number" min="${["base", "columns"].includes(key) ? 0 : ["w", "d", "h"].includes(key) ? 5 : 1}" step="${["w", "d", "h", "spacing", "base"].includes(key) ? ".1" : 1}" data-key="${key}" aria-label="${label}"></label>`).join("") + "</div>";
     const name = el.querySelector(".typehead input");
     name.value = t.name;
     name.onchange = () => {
@@ -41578,21 +41591,20 @@ function draw() {
   const explode = $("#explode").checked;
   for (const part of parts) {
     for (const ins of part.instances) {
-      const obj = mesh(part.solid, { body: 8494250, lid: 11918482, key: 15772264, pin: 15846778 }[part.role]);
+      const obj = mesh(part.solid, { body: 8494250, lid: 11918482 }[part.role]);
       obj.position.set(...ins.pose);
       if (explode) {
         if (part.role === "lid") obj.position.z += 65;
-        if (part.role === "pin") obj.position.z += 93;
-        if (part.role === "key") obj.position.z += 22;
       }
       group.add(obj);
       const edge = new LineSegments(new EdgesGeometry(obj.geometry, 25), new LineBasicMaterial({ color: 1322295, transparent: true, opacity: 0.3 }));
       obj.add(edge);
     }
   }
-  if ($("#ghost").checked) for (const b of current.boxes) {
-    const m = new Mesh(new BoxGeometry(b.mini.w, b.mini.d, b.mini.h), new MeshStandardMaterial({ color: 9690315, transparent: true, opacity: 0.22, depthWrite: false }));
-    m.position.set(b.x + b.w / 2, b.d / 2, 4 + b.mini.h / 2);
+  if ($("#ghost").checked) for (const b of current.boxes) for (const g of b.models) {
+    const m = new Mesh(new BoxGeometry(g.w, g.d, g.h), new MeshStandardMaterial({ color: 9690315, transparent: true, opacity: 0.22, depthWrite: false }));
+    m.userData.ghost = true;
+    m.position.set(b.x + g.x + g.w / 2, g.y + g.d / 2, g.z + g.h / 2);
     group.add(m);
     const edge = new LineSegments(new EdgesGeometry(m.geometry), new LineBasicMaterial({ color: 10019790, transparent: true, opacity: 0.75 }));
     m.add(edge);
@@ -41636,8 +41648,8 @@ function update() {
     $("#error").textContent = "";
     $("#export").disabled = false;
     $("#status").textContent = "READY";
-    $("#extent").textContent = `${p.width} \xD7 ${p.depth} \xD7 ${p.height + 5} mm assembled`;
-    $("#stats").innerHTML = [["\u76D2\u5B50 / BOXES", p.boxes.length], ["\u9023\u63A5\u9375 / BRIDGES", p.joints.length], ["\u6253\u5370\u96F6\u4EF6 / PARTS", ps.reduce((s, a) => s + a.qty, 0)], ["\u5171\u540C\u9AD8\u5EA6 / HEIGHT", p.height + "<small> mm</small>"]].map(([label, v]) => `<div class="stat"><strong>${v}</strong><span>${label}</span></div>`).join("");
+    $("#extent").textContent = `${p.width.toFixed(1)} \xD7 ${p.depth.toFixed(1)} \xD7 ${p.height.toFixed(1)} mm assembled`;
+    $("#stats").innerHTML = [["\u76D2\u5B50 / UNITS", p.boxes.length], ["\u6A21\u578B / MODELS", p.modelCount], ["\u6253\u5370\u96F6\u4EF6 / PARTS", ps.reduce((s, a) => s + a.qty, 0)], ["\u6563\u4EF6 / SMALL PARTS", 0]].map(([label, v]) => `<div class="stat"><strong>${v}</strong><span>${label}</span></div>`).join("");
     $("#bom").replaceChildren();
     for (const a of ps) {
       const row = document.createElement("tr");
@@ -41649,7 +41661,7 @@ function update() {
       $("#bom").append(row);
     }
     try {
-      localStorage.setItem("mboxeditor.v1", JSON.stringify({ types, clearance }));
+      localStorage.setItem("mboxeditor.v2", JSON.stringify({ types, clearance }));
     } catch {
     }
     draw();
@@ -41661,7 +41673,7 @@ function update() {
   }
 }
 $("#add").onclick = () => {
-  types.push({ name: "New miniature", w: 32, d: 32, h: 48, count: 1 });
+  types.push({ name: "New miniature", w: 32, d: 32, h: 48, count: 5, perUnit: 5, columns: 0, spacing: 2, base: 0 });
   cards();
   update();
 };
@@ -41711,6 +41723,8 @@ try {
 update();
 window.mbox = { get plan() {
   return current;
+}, get ghostCount() {
+  return group?.children.filter((o) => o.userData.ghost).length;
 }, get partCount() {
   return parts?.length;
 } };
