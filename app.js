@@ -3476,7 +3476,7 @@ var require_fromNoisyPoints = __commonJS({
       vec3.scale(out, out, 1 / n);
       let xx = 0;
       let xy = 0;
-      let xz = 0;
+      let xz2 = 0;
       let yy = 0;
       let yz2 = 0;
       let zz = 0;
@@ -3485,14 +3485,14 @@ var require_fromNoisyPoints = __commonJS({
         vec3.subtract(vn, v, out);
         xx += vn[0] * vn[0];
         xy += vn[0] * vn[1];
-        xz += vn[0] * vn[2];
+        xz2 += vn[0] * vn[2];
         yy += vn[1] * vn[1];
         yz2 += vn[1] * vn[2];
         zz += vn[2] * vn[2];
       });
       xx /= n;
       xy /= n;
-      xz /= n;
+      xz2 /= n;
       yy /= n;
       yz2 /= n;
       zz /= n;
@@ -3502,22 +3502,22 @@ var require_fromNoisyPoints = __commonJS({
       const wdv = vec3.create();
       let det = yy * zz - yz2 * yz2;
       wdv[0] = det;
-      wdv[1] = xz * yz2 - xy * zz;
-      wdv[2] = xy * yz2 - xz * yy;
+      wdv[1] = xz2 * yz2 - xy * zz;
+      wdv[2] = xy * yz2 - xz2 * yy;
       let weight = det * det;
       vec3.add(vn, vn, vec3.scale(wdv, wdv, weight));
-      det = xx * zz - xz * xz;
-      wdv[0] = xz * yz2 - xy * zz;
+      det = xx * zz - xz2 * xz2;
+      wdv[0] = xz2 * yz2 - xy * zz;
       wdv[1] = det;
-      wdv[2] = xy * xz - yz2 * xx;
+      wdv[2] = xy * xz2 - yz2 * xx;
       weight = det * det;
       if (vec3.dot(vn, wdv) < 0) {
         weight = -weight;
       }
       vec3.add(vn, vn, vec3.scale(wdv, wdv, weight));
       det = xx * yy - xy * xy;
-      wdv[0] = xy * yz2 - xz * yy;
-      wdv[1] = xy * xz - yz2 * xx;
+      wdv[0] = xy * yz2 - xz2 * yy;
+      wdv[1] = xy * xz2 - yz2 * xx;
       wdv[2] = det;
       weight = det * det;
       if (vec3.dot(vn, wdv) < 0) {
@@ -17595,7 +17595,7 @@ var Vector4 = class _Vector4 {
       const yy = (m22 + 1) / 2;
       const zz = (m33 + 1) / 2;
       const xy = (m12 + m21) / 4;
-      const xz = (m13 + m31) / 4;
+      const xz2 = (m13 + m31) / 4;
       const yz2 = (m23 + m32) / 4;
       if (xx > yy && xx > zz) {
         if (xx < epsilon) {
@@ -17605,7 +17605,7 @@ var Vector4 = class _Vector4 {
         } else {
           x = Math.sqrt(xx);
           y = xy / x;
-          z = xz / x;
+          z = xz2 / x;
         }
       } else if (yy > zz) {
         if (yy < epsilon) {
@@ -17624,7 +17624,7 @@ var Vector4 = class _Vector4 {
           z = 0;
         } else {
           z = Math.sqrt(zz);
-          x = xz / z;
+          x = xz2 / z;
           y = yz2 / z;
         }
       }
@@ -20253,7 +20253,7 @@ var Matrix4 = class _Matrix4 {
    * @param {number} zy - The amount to shear Z by Y.
    * @return {Matrix4} A reference to this matrix.
    */
-  makeShear(xy, xz, yx, yz2, zx, zy) {
+  makeShear(xy, xz2, yx, yz2, zx, zy) {
     this.set(
       1,
       yx,
@@ -20263,7 +20263,7 @@ var Matrix4 = class _Matrix4 {
       1,
       zy,
       0,
-      xz,
+      xz2,
       yz2,
       1,
       0,
@@ -20287,19 +20287,19 @@ var Matrix4 = class _Matrix4 {
     const te2 = this.elements;
     const x = quaternion._x, y = quaternion._y, z = quaternion._z, w = quaternion._w;
     const x2 = x + x, y2 = y + y, z2 = z + z;
-    const xx = x * x2, xy = x * y2, xz = x * z2;
+    const xx = x * x2, xy = x * y2, xz2 = x * z2;
     const yy = y * y2, yz2 = y * z2, zz = z * z2;
     const wx = w * x2, wy = w * y2, wz = w * z2;
     const sx = scale.x, sy = scale.y, sz = scale.z;
     te2[0] = (1 - (yy + zz)) * sx;
     te2[1] = (xy + wz) * sx;
-    te2[2] = (xz - wy) * sx;
+    te2[2] = (xz2 - wy) * sx;
     te2[3] = 0;
     te2[4] = (xy - wz) * sy;
     te2[5] = (1 - (xx + zz)) * sy;
     te2[6] = (yz2 + wx) * sy;
     te2[7] = 0;
-    te2[8] = (xz + wy) * sz;
+    te2[8] = (xz2 + wy) * sz;
     te2[9] = (yz2 - wx) * sz;
     te2[10] = (1 - (xx + yy)) * sz;
     te2[11] = 0;
@@ -41447,16 +41447,17 @@ var sideY = (s) => import_modeling.default.transforms.mirrorY(rotateZ(-Math.PI /
 function male(b, c) {
   return union(...ports(b.d).map((p) => tongue(b.w, p, 0, b.h)));
 }
-var latchWidth = (b) => Math.min(24, Math.min(b.w, b.d) - 22);
-function lidTabs(b) {
-  const tw = latchWidth(b), sx = (b.w - tw) / 2, h = b.h;
-  const front = union(B(sx, 7.6, h - 14, tw, 1.2, 14.6), yz([[8.7, h - 10], [10, h - 10], [8.7, h - 8.6]], sx, tw));
-  return [translate([0, b.d, 0], import_modeling.default.transforms.mirrorY(front)), translate([b.w, 0, 0], rotateZ(Math.PI / 2, translate([(b.d - b.w) / 2, 0, 0], front)))];
+var latchWidth = (b) => Math.min(24, b.w - 22);
+function lidTabs(b, c = 0) {
+  const tw = latchWidth(b), x = (b.w - tw) / 2, h = b.h;
+  const blade = B(x, 8.8, h - 1.2, tw, 1.2, 1.2);
+  const tooth = yz([[8.8, h - 7], [10, h - 7], [10, h], [8.8, h]], x + tw - 6, 6);
+  return [translate([0, 0, -2 * c], union(blade, tooth))];
 }
-function latchCuts(b, c) {
-  const tw = latchWidth(b), sx = (b.w - tw) / 2, h = b.h;
-  const front = union(B(sx - c, 5.1, h - 14.4, tw + 2 * c, 3.7, 15.4), yz([[8.5, h - 10 - c], [10.1 + c, h - 10 - c], [8.5, h - 8.1 + c]], sx - c, tw + 2 * c));
-  return [translate([0, b.d, 0], import_modeling.default.transforms.mirrorY(front)), translate([b.w, 0, 0], rotateZ(Math.PI / 2, translate([(b.d - b.w) / 2, 0, 0], front)))];
+var xz = (points, y, d) => import_modeling.default.transforms.transform([1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, y + d, 0, 1], extrudeLinear({ height: d }, polygon({ points })));
+function railCut(b, c) {
+  const { w, d, h } = b;
+  return xz([[8.2, h - 5], [w - 8.2, h - 5], [w - 8.2, h - 2.4], [w - 10.6, h], [10.6, h], [8.2, h - 2.4]], 4, d - 12.2);
 }
 var corners = (b) => [[6, 6], [b.w - 6, 6], [6, b.d - 6], [b.w - 6, b.d - 6]];
 function pyramid(x, y, z, r) {
@@ -41465,7 +41466,8 @@ function pyramid(x, y, z, r) {
 function body(b, c) {
   const { w, d, h } = b;
   let shell = subtract(union(B(4 + c / 2, 4 + c / 2, 0, w - 8 - c, d - 8 - c, h), male(b, c), sideY(union(...ports(w).map((p) => tongue(d, p, 0, h))))), B(BAND, BAND, 2.4, w - 2 * BAND, d - 2 * BAND, h), ...ports(d).map((p) => tongue(8, p, -1, h + 2, c)), ...ports(w).map((p) => sideY(tongue(8, p, -1, h + 2, c))));
-  for (const cut of latchCuts(b, c)) shell = subtract(shell, cut);
+  shell = subtract(shell, railCut(b, c), B(8.2, 4, h - 8.5, w - 16.4, 6.5, 10.5), B((w - latchWidth(b)) / 2 - 0.5, 8.1, h - 8.5, latchWidth(b) + 1, 2.3, 10.5));
+  shell = union(shell, B((w + latchWidth(b)) / 2 - 6, 8 + c / 6, 0, 6, 0.6, h - 5.8));
   for (const [x, y] of corners(b)) {
     shell = union(shell, B(x - 1.2, y - 1.2, h - 0.1, 2.4, 2.4, 3.5), pyramid(x, y, h + 3.4, 0.5));
     shell = subtract(shell, pyramid(x, y, -0.01, 0.5 + c));
@@ -41481,19 +41483,17 @@ function body(b, c) {
 }
 function lid(b, c) {
   const { w, d, h } = b;
-  let s = union(B(4 + c, 4 + c, h + 0.3, w - 8 - 2 * c, d - 8 - 2 * c, 2.4), ...lidTabs(b));
-  if (d > 48) s = union(s, B(BAND + c, 23.6, h - 2, 1.2, d - 47.2, 2.6), B(w - BAND - 1.2 - c, 23.6, h - 2, 1.2, d - 47.2, 2.6));
-  for (const [x, y] of corners(b)) s = subtract(s, B(x - 1.2 - c, y - 1.2 - c, h - 1, 2.4 + 2 * c, 2.4 + 2 * c, 6));
-  const access = B(w / 2 - 9, 9.1, h - 3, 18, 14.1, 7);
-  s = subtract(s, translate([0, d, 0], import_modeling.default.transforms.mirrorY(access)), translate([w, 0, 0], rotateZ(Math.PI / 2, translate([(d - w) / 2, 0, 0], access))));
-  return import_modeling.default.modifiers.retessellate(s);
+  const roof = xz([[8.2 + c, h - 4.7], [w - 8.2 - c, h - 4.7], [w - 8.2 - c, h - 2.4 - 2 * c], [w - 10.6, h - 2 * c], [10.6, h - 2 * c], [8.2 + c, h - 2.4 - 2 * c]], 10.2, d - 18.4 - c);
+  const x = (w - latchWidth(b)) / 2;
+  const root = xz([[x, h - 4.7 + 2 * c], [x + 4, h - 4.7 + 2 * c], [x + 7.7, h - 1.2], [x + 7.7, h], [x, h]], 8.8, 4);
+  return import_modeling.default.modifiers.retessellate(union(roof, translate([0, 0, -2 * c], root), ...lidTabs(b, c)));
 }
-var INSTRUCTIONS = `# mboxeditor v4 \u2014 recessed seam, two parts/unit
-Unprinted CAD prototype; NOT load-rated or physically validated. Body base down, lid automatically top-face down. No loose hardware. No support geometry intended; validate slicer and a complete pair before batching.
-Nominal rectangle W/D=16n+8, n>=2; cavity starts 10.4 mm inside it. Neighbour origins advance W-8 / D-8 (16n). Rectangular reservations overlap 8 mm; the actual complementary wall profiles do NOT overlap. Wall butt datum is 4 mm inside each reserved edge. Tongues lie entirely inside the reservation. LEFT/FRONT female, RIGHT/BACK male, port centres 13+16k. Full-height dovetails slide vertically; lower bodies together BEFORE lids. At least two actual ports per side. No vertical lock or stop. Four-neighbour grid requires simultaneous vertical insertion, not horizontal pressing.
-Four wall-borne corner seats at (6,6) and mirrored coordinates support same-footprint stacks at H+3.4; 47.7 degree pyramid keys locate but do not latch. Lid corner notches clear seats; lid is not the load path. Stack requires identical footprints/heights in preview.
-Lid stays lift-on with two broad integral INTERNAL leaves in the RIGHT/BACK wall bands, not external skirts. Width 18\u201324 mm, thickness 1.2 mm, free length 14 mm; inward hooks engage sloped wall pockets. From the lid-top openings press BOTH leaves OUTWARD into their recessed wall space, hold released while lowering/lifting, then let go to latch. Nominal manual release is 1.4 mm at hook (elastic bending/force NOT validated). The two 18 mm-wide top apertures remain accessible between neighbouring lids; remove upper stacked bodies before accessing lower lids. Hooks give positive CAD vertical retention, NOT a certified snap or inversion-safe transport latch. Fit lids after joining bodies; remove lids before sliding bodies apart. Mixed-size grids can have unjoined neighbours: only settings.joints denotes engagement.
-Rebated walls shorten the connector load arm; no measured strength improvement is claimed. No fatigue, adhesion, impact, friction, bending or print test performed. Carry upright with TWO HANDS SUPPORTING ALL BASES. Never lift by lids, an end unit or an upper unit.
+var INSTRUCTIONS = `# Solid horizontal sliding lid \u2014 unprinted CAD prototype
+Exactly body + lid per unit. Body base down; lid automatically roof-face down. No loose hardware. Inspect slicer and print a full pair before batching.
+Recessed LEFT/FRONT female and RIGHT/BACK male seams: 16 mm pitch, 13+16k ports, 8 mm overlapping reservations, 10.4 mm cavity margin. Lower bodies together vertically before lids. Four wall seats locate stacks without a vertical lock; stack preview needs equal footprints/heights.
+Insert lid from FRONT (-Y) toward BACK (+Y) into recessed side rails. Lift the broad integral front-end leaf to clear the end shoulder, slide to the rear positive stop, release. To open lift the leaf approximately 4\u20135 mm at the tooth (CAD root-pivot pose 0.22 radians), hold and pull toward -Y. Do not lift the captured roof vertically. Release acts outside the model cavity. Roof is solid above the entire cavity, without top holes. End/rail seams remain: NOT dust-tight or watertight.
+FRONT insertion edge requires at least one lid-depth of clear working space. A front neighbour blocks withdrawal: detach the blocking neighbour/unit first. Remove upper stacked units before accessing lower lids. Extraction preview is illustrative, NOT a valid path in every grid/stack. Only settings.joints denotes real mixed-grid engagement.
+The broad integral 18\u201324 mm end leaf and tooth prevent horizontal drift in the locked CAD pose. Elastic bending, force, fatigue, snap action and inversion retention have NOT been physically verified. Triangle slope tests are CAD checks, not print certification. Carry upright with BOTH HANDS SUPPORTING ALL BASES; never lift by lid, connector or upper unit.
 `;
 
 // src/engine.mjs
@@ -41583,7 +41583,7 @@ function stl(solid) {
 }
 function exportZip(p, parts2 = makeParts(p)) {
   const files = {};
-  const bom = parts2.map(({ name, qty, size, role, instances }) => ({ file: name + ".stl", quantity: qty, bounds_mm: size, role, print_orientation: role === "lid" ? "top-face down" : "base down", instances: instances.map(({ box, pose }) => ({ box, assembly_translation_mm: pose })) }));
+  const bom = parts2.map(({ name, qty, size, role, instances }) => ({ file: name + ".stl", quantity: qty, bounds_mm: size, role, assembly_motion: role === "lid" ? "Y-axis slide from free FRONT (-Y); lift broad end leaf to release; detach blocking neighbour first" : "vertical seam insertion", print_orientation: role === "lid" ? "top-face down" : "base down", instances: instances.map(({ box, pose }) => ({ box, assembly_translation_mm: pose })) }));
   for (const a of parts2) {
     const solid = printSolid(a);
     files[a.name + ".stl"] = stl(solid);
@@ -41615,6 +41615,11 @@ try {
 } catch {
 }
 $("#clearance").value = clearance;
+var slideWarning = document.createElement("div");
+slideWarning.id = "slide-warning";
+slideWarning.className = "hint";
+slideWarning.textContent = "Solid lid slides along Y: insert from FRONT (\u2212Y), lift broad END leaf and pull forward to release. Keep one lid-depth free in front. Grid neighbour blocks withdrawal: detach it first. Remove stacked units above. Preview extraction is illustrative, not collision-free in blocked layouts. No top holes; end seams remain, not dust/watertight.";
+$("#error").after(slideWarning);
 var layout = { mode: "row", columns: 2, layers: 2 };
 var layoutHost = document.createElement("div");
 layoutHost.className = "tolerance";
@@ -41708,7 +41713,7 @@ function draw() {
       const obj = mesh(part.solid, { body: 8494250, lid: 11918482 }[part.role]);
       obj.position.set(...ins.pose);
       if (explode) {
-        if (part.role === "lid") obj.position.z += 65;
+        if (part.role === "lid") obj.position.y -= current.boxes.find((b) => b.id === ins.box).d * 0.55;
       }
       group.add(obj);
       const edge = new LineSegments(new EdgesGeometry(obj.geometry, 25), new LineBasicMaterial({ color: 1322295, transparent: true, opacity: 0.3 }));
