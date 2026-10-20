@@ -38,40 +38,40 @@ const tongueProfile=(w,p,c=0)=>polygon({points:[[w-4.3,p-1.4-c],[w-4+c,p-1.4-c],
 const tongue=(w,p,z,h,c=0)=>translate([0,0,z],extrudeLinear({height:h},tongueProfile(w,p,c)));
 const sideY=s=>modeling.transforms.mirrorY(rotateZ(-Math.PI/2,s));
 export function male(b,c){return union(...ports(b.d).map(p=>tongue(b.w,p,0,b.h)));}
-export const latchWidth=b=>Math.min(24,Math.min(b.w,b.d)-22);
-export function lidTabs(b){const tw=latchWidth(b),sx=(b.w-tw)/2,h=b.h;
- // Printed lid points inward; this hook's slope is upward in its print frame.
- const front=union(B(sx,7.6,h-14,tw,1.2,14.6),yz([[8.7,h-10],[10,h-10],[8.7,h-8.6]],sx,tw));
- // Use only male right/back wall bands; female grooves occupy their release space.
- return [translate([0,b.d,0],modeling.transforms.mirrorY(front)),translate([b.w,0,0],rotateZ(Math.PI/2,translate([(b.d-b.w)/2,0,0],front)))];
+// Slide toward -Y to open. Rails and all release features stay in wall bands.
+export const latchWidth=b=>Math.min(24,b.w-22);
+export function lidTabs(b,c=0){const tw=latchWidth(b),x=(b.w-tw)/2,h=b.h;
+ const blade=B(x,8.8,h-1.2,tw,1.2,1.2);
+ const tooth=yz([[8.8,h-7],[10,h-7],[10,h],[8.8,h]],x+tw-6,6);
+ return [translate([0,0,-2*c],union(blade,tooth))];
 }
-function latchCuts(b,c){const tw=latchWidth(b),sx=(b.w-tw)/2,h=b.h;
- const front=union(B(sx-c,5.1,h-14.4,tw+2*c,3.7,15.4),yz([[8.5,h-10-c],[10.1+c,h-10-c],[8.5,h-8.1+c]],sx-c,tw+2*c));
- return [translate([0,b.d,0],modeling.transforms.mirrorY(front)),translate([b.w,0,0],rotateZ(Math.PI/2,translate([(b.d-b.w)/2,0,0],front)))];
+export function releasedLid(b,c,angle=.22){const tab=lidTabs(b,c)[0],root=[(b.w-latchWidth(b))/2,9.4,b.h-2*c],local=translate(root.map(v=>-v),tab);
+ return union(subtract(lid(b,c),tab),translate(root,modeling.transforms.rotateY(-angle,local)));
 }
+const xz=(points,y,d)=>modeling.transforms.transform([1,0,0,0,0,0,1,0,0,-1,0,0,0,y+d,0,1],extrudeLinear({height:d},polygon({points})));
+function railCut(b,c){const {w,d,h}=b;return xz([[8.2,h-5],[w-8.2,h-5],[w-8.2,h-2.4],[w-10.6,h],[10.6,h],[8.2,h-2.4]],4,d-12.2);}
 const corners=b=>[[6,6],[b.w-6,6],[6,b.d-6],[b.w-6,b.d-6]];
 function pyramid(x,y,z,r){return intersect(yz([[y-r,z],[y+r,z],[y,z+r*1.1]],x-r,2*r),translate([x,y,0],rotateZ(Math.PI/2,yz([[-r,z],[r,z],[0,z+r*1.1]],-r,2*r))));}
 export function body(b,c){const {w,d,h}=b;
  let shell=subtract(union(B(4+c/2,4+c/2,0,w-8-c,d-8-c,h),male(b,c),sideY(union(...ports(w).map(p=>tongue(d,p,0,h))))),B(BAND,BAND,2.4,w-2*BAND,d-2*BAND,h),...ports(d).map(p=>tongue(8,p,-1,h+2,c)),...ports(w).map(p=>sideY(tongue(8,p,-1,h+2,c))));
- for(const cut of latchCuts(b,c))shell=subtract(shell,cut);
+ shell=subtract(shell,railCut(b,c),B(8.2,4,h-8.5,w-16.4,6.5,10.5),B((w-latchWidth(b))/2-.5,8.1,h-8.5,latchWidth(b)+1,2.3,10.5));
+ // End shoulder captures the tooth against horizontal drift; no loose latch.
+ shell=union(shell,B((w+latchWidth(b))/2-6,8.0+c/6,0,6,.6,h-5.8));
  for(const [x,y] of corners(b)){shell=union(shell,B(x-1.2,y-1.2,h-.1,2.4,2.4,3.5),pyramid(x,y,h+3.4,.5));shell=subtract(shell,pyramid(x,y,-.01,.5+c));}
  for(const m of b.models)if(b.base>0){const k=b.base+1,cx=m.x+m.w/2,cy=m.y+m.d/2;shell=subtract(shell,B(cx-k/2,cy-k/2,1.8,k,k,.7));}
  const ribs=[];for(let col=1;col<b.columns;col++)ribs.push(B(BAND+col*(b.mini.w+b.spacing)-b.spacing/2-.4,BAND-.4,2,.8,d-2*BAND+.8,2.4));for(let row=1;row<b.rows;row++)ribs.push(B(BAND-.4,BAND+row*(b.mini.d+b.spacing)-b.spacing/2-.4,2,w-2*BAND+.8,.8,2.4));return modeling.modifiers.retessellate(ribs.length?union(shell,...ribs):shell);
 }
 export function lid(b,c){const {w,d,h}=b;
- // Rooted internal leaves, with top-only access even between joined units.
- let s=union(B(4+c,4+c,h+.3,w-8-2*c,d-8-2*c,2.4),...lidTabs(b));
- if(d>48)s=union(s,B(BAND+c,23.6,h-2,1.2,d-47.2,2.6),B(w-BAND-1.2-c,23.6,h-2,1.2,d-47.2,2.6));
- for(const [x,y]of corners(b))s=subtract(s,B(x-1.2-c,y-1.2-c,h-1,2.4+2*c,2.4+2*c,6));
- // Open roof apertures expose the INNER face; squeeze leaves toward cavity.
- const access=B(w/2-9,9.1,h-3,18,14.1,7);
- s=subtract(s,translate([0,d,0],modeling.transforms.mirrorY(access)),translate([w,0,0],rotateZ(Math.PI/2,translate([(d-w)/2,0,0],access))));
- return modeling.modifiers.retessellate(s);
+ const roof=xz([[8.2+c,h-4.7],[w-8.2-c,h-4.7],[w-8.2-c,h-2.4-2*c],[w-10.6,h-2*c],[10.6,h-2*c],[8.2+c,h-2.4-2*c]],10.2,d-18.4-c);
+ // Broad end grip/leaf is outside the cavity shadow, not a roof aperture.
+ const x=(w-latchWidth(b))/2;
+ const root=xz([[x,h-4.7+2*c],[x+4,h-4.7+2*c],[x+7.7,h-1.2],[x+7.7,h],[x,h]],8.8,4);
+ return modeling.modifiers.retessellate(union(roof,translate([0,0,-2*c],root),...lidTabs(b,c)));
 }
-export const INSTRUCTIONS=`# mboxeditor v4 — recessed seam, two parts/unit
-Unprinted CAD prototype; NOT load-rated or physically validated. Body base down, lid automatically top-face down. No loose hardware. No support geometry intended; validate slicer and a complete pair before batching.
-Nominal rectangle W/D=16n+8, n>=2; cavity starts 10.4 mm inside it. Neighbour origins advance W-8 / D-8 (16n). Rectangular reservations overlap 8 mm; the actual complementary wall profiles do NOT overlap. Wall butt datum is 4 mm inside each reserved edge. Tongues lie entirely inside the reservation. LEFT/FRONT female, RIGHT/BACK male, port centres 13+16k. Full-height dovetails slide vertically; lower bodies together BEFORE lids. At least two actual ports per side. No vertical lock or stop. Four-neighbour grid requires simultaneous vertical insertion, not horizontal pressing.
-Four wall-borne corner seats at (6,6) and mirrored coordinates support same-footprint stacks at H+3.4; 47.7 degree pyramid keys locate but do not latch. Lid corner notches clear seats; lid is not the load path. Stack requires identical footprints/heights in preview.
-Lid stays lift-on with two broad integral INTERNAL leaves in the RIGHT/BACK wall bands, not external skirts. Width 18–24 mm, thickness 1.2 mm, free length 14 mm; inward hooks engage sloped wall pockets. From the lid-top openings press BOTH leaves OUTWARD into their recessed wall space, hold released while lowering/lifting, then let go to latch. Nominal manual release is 1.4 mm at hook (elastic bending/force NOT validated). The two 18 mm-wide top apertures remain accessible between neighbouring lids; remove upper stacked bodies before accessing lower lids. Hooks give positive CAD vertical retention, NOT a certified snap or inversion-safe transport latch. Fit lids after joining bodies; remove lids before sliding bodies apart. Mixed-size grids can have unjoined neighbours: only settings.joints denotes engagement.
-Rebated walls shorten the connector load arm; no measured strength improvement is claimed. No fatigue, adhesion, impact, friction, bending or print test performed. Carry upright with TWO HANDS SUPPORTING ALL BASES. Never lift by lids, an end unit or an upper unit.
+export const INSTRUCTIONS=`# Solid horizontal sliding lid — unprinted CAD prototype
+Exactly body + lid per unit. Body base down; lid automatically roof-face down. No loose hardware. Inspect slicer and print a full pair before batching.
+Recessed LEFT/FRONT female and RIGHT/BACK male seams: 16 mm pitch, 13+16k ports, 8 mm overlapping reservations, 10.4 mm cavity margin. Lower bodies together vertically before lids. Four wall seats locate stacks without a vertical lock; stack preview needs equal footprints/heights.
+Insert lid from FRONT (-Y) toward BACK (+Y) into recessed side rails. Lift the broad integral front-end leaf to clear the end shoulder, slide to the rear positive stop, release. To open lift the leaf approximately 4–5 mm at the tooth (CAD root-pivot pose 0.22 radians), hold and pull toward -Y. Do not lift the captured roof vertically. Release acts outside the model cavity. Roof is solid above the entire cavity, without top holes. End/rail seams remain: NOT dust-tight or watertight.
+FRONT insertion edge requires at least one lid-depth of clear working space. A front neighbour blocks withdrawal: detach the blocking neighbour/unit first. Remove upper stacked units before accessing lower lids. Extraction preview is illustrative, NOT a valid path in every grid/stack. Only settings.joints denotes real mixed-grid engagement.
+The broad integral 18–24 mm end leaf and tooth prevent horizontal drift in the locked CAD pose. Elastic bending, force, fatigue, snap action and inversion retention have NOT been physically verified. Triangle slope tests are CAD checks, not print certification. Carry upright with BOTH HANDS SUPPORTING ALL BASES; never lift by lid, connector or upper unit.
 `;

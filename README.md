@@ -1,4 +1,4 @@
-# mboxeditor v4 — recessed interlocking seams
+# mboxeditor — solid horizontal sliding lid / recessed interlocking seams
 
 Browser-only multi-miniature editor: Three.js, JSCAD CSG, STL and ZIP/BOM. Exactly **body + lid per unit**, no pins, keys or loose hardware. Multi-model capacity, per-type heights, optional base pockets, ribs and complete model envelopes remain. Gemini provenance is restricted to the software architecture (`docs/gemini-design.txt`); mechanics are independently developed.
 
@@ -32,23 +32,23 @@ At c=.30:
 
 | Configuration | Nominal envelope W×D×H | Actual body STL bounds | Lid STL bounds |
 |---|---|---|---|
-| Single32×32×48 miniature |56×56×56.4|51.85×51.85×60.35|47.4×47.4×16.7|
-| Five32×32×48, 3 columns |136×88×56.4|131.85×83.85×60.35|127.4×79.4×16.7|
-| Single65×65×82 |88×88×90.4|83.85×83.85×94.35|79.4×79.4×16.7|
-| Minimum5 mm model |40×40×26|35.85×35.85×29.95|31.4×31.4×16.7|
-| Maximum test227×227×237 |248×248×245.4|243.85×243.85×249.35|239.4×239.4×16.7|
+| Single32×32×48 miniature |56×56×56.4|51.85×51.85×60.35|39×38.7×7|
+| Five32×32×48, 3 columns |136×88×56.4|131.85×83.85×60.35|119×70.7×7|
+| Single65×65×82 |88×88×90.4|83.85×83.85×94.35|71×70.7×7|
+| Minimum5 mm model |40×40×26|35.85×35.85×29.95|23×22.7×7|
+| Maximum test227×227×237 |248×248×245.4|243.85×243.85×249.35|231×230.7×7|
 
 These are nominal reservations versus tight physical STL bounds, not interchangeable dimensions. A32 mm unit has a48 mm origin pitch, three ports/edge, and remains below70 mm. The thick seam band costs16 mm extra total cavity margin compared with v3; quantization can add another pitch. Maximum unscaled single-model W/D is227.2 mm. Default five-model + Dreadnought reservations assemble to216×88×94.35 mm. Settings/UI dimensions describe the nominal assembly reservation; actual material begins inside unused perimeter rebates.
 
-## Vertical interfaces and internal lid retention
+## Solid horizontal lid / designated free insertion edge
 
-Four2.4×2.4 wall-top corner seats at (6,6), (W−6,6), (6,D−6), (W−6,D−6) rise to H+3.4. Each has a1 mm-wide, .55 mm-tall square pyramid (47.7° slope) and matching underside recess. Seats carry stack loads into walls, not the lid roof. Stack pitch **H+3.4**; upper floor sits .7 mm above lid roof. Stack preview requires identical footprint/height; keys locate XY but do not latch Z.
+Four 2.4×2.4 wall-top corner seats at (6,6) and mirrored coordinates carry stacks at H+3.4; pyramid keys register XY, not Z retention. Seats carry loads through walls, not the lid. Stack preview requires identical footprint/height.
 
-The broad **lift-on lid retains positive integrated hooks**, moved inside the RIGHT/BACK (male) wall bands rather than exterior skirts. Two leaves are 18–24 mm wide, 1.2 mm thick and 14 mm free length. Their inward triangular hooks reach 10 mm inboard, behind the 10.4 mm cavity datum; sloped wall pockets provide clearance in the locked pose and vertical geometric capture. Female FRONT/LEFT bands were deliberately avoided: outward release there would intersect female connector channels. Nominal manual retraction is **1.4 mm outward into the male wall band**, not into stored miniature envelopes or adjacent units.
+The lid is an **uninterrupted solid roof over the ENTIRE cavity shadow**. No release holes enter the roof. It slides on the Y axis, inserting from FRONT (−Y) toward BACK (+Y). Recessed left/right channels span X=8.2…W−8.2; their roofs narrow on 45° chamfers from Z=H−2.4 to H. The lid clears with c lateral and 2c vertical relief. Its lower face is H−4.7, still at least 1.3 mm above maximum-height miniature envelopes. A rear wall is the positive insertion stop; the chamfered rails prevent vertical lifting while engaged. At c=.3 the roof-to-tooth print thickness is 7 mm.
 
-Insert fingers through the two **18×14.1 mm lid-top apertures**, press the RIGHT and BACK leaves outward, hold while lowering/lifting, then release to latch. No external-wall access is needed between joined lids. Remove upper stacked bodies first. Finger access is above model tops. Lid roof remains H+.3 to H+2.7; overall lid print height is now **16.7 mm**, not 4.7 mm. Both parts stay single connected solids with no loose bits. Hooks establish CAD retention, not validated snap action or transport/inversion certification.
+An **integral 18–24 mm-wide, 1.2 mm-thick broad front-end leaf** ends in a 6 mm-wide tooth. It captures a body end shoulder against accidental horizontal drift. Lift the exposed end leaf, hold it up and pull the lid toward −Y. The root-pivot CAD release pose is .22 rad (about 4–5 mm tip motion); actual distributed elastic flex, root strain, finger ergonomics, force and fatigue are NOT validated. The tooth extends 7 mm below the leaf; end wall relief is 8.5 mm deep. All features stay in the nominal rectangle and outside the model cavity. No tiny separate tab or loose hardware. There is an end seam and clearance along rails: **NOT dust-tight or watertight**.
 
-**Release verification limitation:** collision tests sample root-pivot leaf rotation through the release sweep and subsequent vertical removal, plus a translated free-leaf envelope. They do not simulate continuous elastic deformation, root strain, release force, fatigue or actual finger compliance. The recess extends to 5.1 mm inboard, leaving only about .8–1.0 mm of local outer wall at the pocket; this needs print/strength testing. The short 14 mm leaf requires physical flex testing; do not batch-print or claim a safe transport latch until this is verified. Top apertures are open (not dust-tight).
+**The front edge must be free, with at least one lid-depth of working space.** A front neighbour in a grid physically blocks extraction: detach the blocking neighbour or the unit BEFORE opening. Remove upper stacked units first. Horizontal preview extraction is illustrative and may intersect blocking neighbours. Do not interpret it as assembly-path certification. This design cannot provide unobstructed removal in all closed grids.
 
 ## Preview / export
 
@@ -58,7 +58,7 @@ ZIP contains body/lid STL files, BOM quantities (two parts/unit), CSV, posed set
 
 ## Verification / limitations
 
-`npm test` covers full model envelopes; min/max/mixed capacity; all four mating faces; independent capture of every counted port; X/Y clearances .15/.30/.60; full-height simultaneous corner insertion; no final body/lid/neighbour solid collision; stack lowering, registration and wall seat stops; lid installation; rectangle containment of every actual triangle; closed cavity floor; actual ZIP STL manifold edges/opposite winding/single connected component/positive volume/bounds. The actual print-frame triangle-normal slope test is unchanged: only real bed-contact surfaces are exempt from the45° limit, with no feature whitelist or bridge allowance.
+`npm test` covers full model envelopes; min/max/mixed capacity; all four mating faces; independent capture of every counted port; X/Y clearances .15/.30/.60; full-height simultaneous corner insertion; no final body/lid/neighbour solid collision; stack lowering, registration and wall seat stops; horizontal lid insertion, locked tooth/rear stop, root-pivot manual release, positive rail capture, full cavity roof-plane coverage and actual triangle vertical rays, front-neighbour blockage; rectangle containment of every actual triangle; closed cavity floor; actual ZIP STL manifold edges/opposite winding/single connected component/positive volume/bounds. The actual print-frame triangle-normal slope test is unchanged: only real bed-contact surfaces are exempt from the45° limit, with no feature whitelist or bridge allowance.
 
 `npm run test:browser` runs actual local Chrome desktop/mobile, editing, persistence, ghosts, real grid/stack poses, incompatible-stack rejection, real downloaded ZIP/BOM/STL audit,250 mm rejection and page errors. Ignored artifacts: `test-results/`.
 
