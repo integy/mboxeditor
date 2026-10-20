@@ -1,13 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {plan,makeParts,exportZip,triangles} from '../src/engine.mjs';
-import {unzipSync,strFromU8} from 'fflate';
-test('mixed boxes connect without overlap, exact quantities and bounded actual solids',()=>{
- const p=plan([{name:'Infantry',w:28,d:28,h:40,count:2},{name:'Tank',w:82,d:60,h:72,count:1}],.3);
- assert.equal(p.boxes.length,3); assert.equal(p.joints.length,2);
- for(let i=0;i<p.boxes.length;i++)for(let j=i+1;j<p.boxes.length;j++)assert.ok(p.boxes[i].x+p.boxes[i].w<p.boxes[j].x);
- const parts=makeParts(p); assert.equal(parts.reduce((s,p)=>s+p.qty,0),3*3+2);
- for(const part of parts){ const ts=triangles(part.solid);assert.ok(ts.length>10);const pts=ts.flat(); for(let a=0;a<3;a++){const vs=pts.map(v=>v[a]);assert.ok(Math.max(...vs)-Math.min(...vs)<=250.001);} }
- const zip=unzipSync(exportZip(p,parts));const bom=JSON.parse(strFromU8(zip['BOM.json']));assert.equal(bom.length,parts.length);assert.ok(zip['assembly.md']);
-});
-test('rejects impossible dimensions instead of scaling',()=>{assert.throws(()=>plan([{name:'Huge',w:240,d:20,h:40,count:1}],.3),/250|large/);assert.throws(()=>plan([{w:20,d:20,h:20,count:0}],.3));});
+import test from 'node:test';import assert from 'node:assert/strict';import {plan,makeParts,exportZip} from '../src/engine.mjs';import {unzipSync,strFromU8} from 'fflate';
+test('five models share a compact unit; exact quantities split and partial units shrink',()=>{const p=plan([{w:32,d:32,h:48,count:11,perUnit:5,columns:3}]);assert.equal(p.boxes.length,3);assert.deepEqual(p.boxes.map(b=>b.models.length),[5,5,1]);assert.ok(p.boxes[2].w<60&&p.boxes[2].d<60);assert.ok(p.boxes[0].w<130);const parts=makeParts(p);assert.deepEqual([...new Set(parts.map(a=>a.role))].sort(),['body','lid']);assert.equal(parts.reduce((s,a)=>s+a.qty,0),6);const bom=JSON.parse(strFromU8(unzipSync(exportZip(p,parts))['BOM.json']));assert.equal(bom.reduce((s,a)=>s+a.quantity,0),6);});
+test('automatic overflow, independent heights and exact envelopes',()=>{const p=plan([{w:110,d:110,h:20,count:7,perUnit:7,columns:3},{w:32,d:32,h:90,count:1}]);assert.equal(p.boxes.reduce((s,b)=>s+b.models.length,0),8);assert.ok(p.boxes.length>2);assert.ok(p.boxes[0].h<p.boxes.at(-1).h);for(const a of makeParts(p))assert.ok(a.size.every(v=>v<=250));});
+test('reject invalid dimensions and settings',()=>{for(const t of [{w:241,d:20,h:40,count:1},{w:20,d:20,h:20,count:0},{w:20,d:20,h:20,count:2,perUnit:0}])assert.throws(()=>plan([t]));});

@@ -1,66 +1,54 @@
-# mboxeditor
+# mboxeditor v2
 
-Browser-only, parametric miniature storage / transport kit editor. Traditional Chinese / English UI, locally bundled Three.js preview and actual watertight binary STL ZIP export. No backend, CDN, account or external runtime assets.
+Browser-only multi-miniature unit editor with local Three.js and real JSCAD CSG binary STL/ZIP export. No server, CDN, purchased hardware or loose small parts.
 
-## Run / verify
+## Run and verify
 
-```sh
+```
 npm install
-npm run dev     # http://127.0.0.1:4173
-npm run build   # static dist/ — host this directory on any static server
+npm run build
 npm test
+npm run dev
 npm run test:browser
 ```
 
-Node 22+ recommended (tested Node 26). Browser tests use installed Chrome at `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`; change `executablePath` in `tests/browser.mjs` for another OS. Tests save actual downloaded ZIP and desktop/mobile screenshots in ignored `test-results/`. A root or project-subpath deployment works because all asset references are relative. Parent workflow handles repository publishing; no deploy credentials required by this app.
+Browser tests use real installed macOS Chrome on localhost:4173. `dist/` contains a separate deployment git repository: build preserves it. No deploy is performed by tests/build. Parent workflow handles publishing.
 
-## Features and honest scope
+## Model counts and adaptive units
 
-- Add/edit/remove miniature types: complete W/D/H envelope, quantity. Each miniature gets its own fixed-base-cradle box. Quantities are not a grid of many figures inside one box.
-- Automatic non-overlapping single-row layout, front-aligned, mixed 50 mm XY sizes and a common height (10 mm step). This deliberately simple layout is connected but **not a space-optimal 2D bin packer**.
-- Orbit/zoom, top view, reset camera, exploded assembly, translucent miniature envelope ghosts, per-part dimensions and BOM, localStorage persistence.
-- Real JSCAD CSG solids, unioned cradles/keys/pins, triangulated binary STL; unique geometry exported once with correct print quantities. ZIP also includes `BOM.csv`, `BOM.json`, `settings.json`, and `assembly.md`.
-- Oversize input rejected; never silently scaled. Every *individual* exported part has XYZ bounds ≤250 mm. The connected assembly can be much larger.
-- No hardware, magnets, glue, metal or purchased fasteners. Sliding captured lids + headed printed lock pins. Captured double-T bridge keys engage opposing side slots; lids cover bridge withdrawal paths.
+Enter complete model W/D/H including weapons, not just base diameter. **Models** is total quantity for that type. **Models/unit** is target capacity; **columns** is requested layout (0=auto); rows are automatic. Over-capacity layouts split into extra units while preserving exact model count. Final partial units shrink their grid. Individual heights are model H+8.4 (minimum 26), not shared across types. Current limit 40 units / 200 models per type keeps browser CSG manageable.
 
-**Prototype, not physically printed or load-tested.** No load-bearing handle is offered. Carry upright using **two hands supporting all box bases**. Do not lift by an end box, lid or bridge. Not inversion-safe: the gravity-seated lock pins can withdraw and miniatures have no vertical clamping. The fixed rectangular cradle limits horizontal base motion only; it does not immobilize thin bases, prevent bouncing or protect a delicate model from shock. A miniature envelope is not a base-shape measurement. Test with your actual model/base before transport. These are explicit limitations, not hidden “restraint” or “handle” features.
+Default five 32×32×48 models occupy one 104.8×70.8×56.4 body shell (actual body width 113.8 including both integral interfaces). A single 32 mm model uses a 36.8×36.8 shell; actual body width 45.8. XY dimensions adapt exactly, no 100 mm minimum. Walls/floor 2.4 mm; low compartment ribs 0.8 mm wide, 2 mm above floor; minimum 2 mm model spacing. Optional **base** is separate measured square base width (0 disables); shallow 0.6 mm floor pockets are organizational, not restraint. Full envelope ghosts remain conservative at nominal floor height. No scaling. Every individual body/lid includes protrusions in its ≤250 mm XYZ bounds; connected row may exceed that.
 
-## Exact design (mm)
+## Exactly two large parts per unit
 
-Coordinate convention: X left→right, Y front→back, Z up. Each body's local front-left-bottom is `[0,0,0]`.
+- Body: single CSG-unioned shell, compartment ribs, integral male dovetail and female open-top channel.
+- Lid: one CSG-unioned plate with two broad cantilever skirts/hooks and inner locating lips.
 
-- Pitch 50 XY, body width `ceil((miniW+26)/50)*50`, depth analogous. Maximum W/D miniature envelope 224 gives 250 body. Width/depth must be ≥5.
-- Common body H `ceil((maxMiniH+16)/10)*10`; H ≤240. Roof top H+3; headed pin top H+5. Per-type count integer 1–20; total ≤30 to keep interactive CSG/preview manageable.
-- Floor 4. Walls 10. Open main cavity `[10,10,4]` to `[W-10,D-10,H]`. Thus clear cavity XY ≥ miniature XY+6; vertical top clearance ≥12.
-- Cradle unioned with floor: inner rectangular pocket miniature W+2 × D+2, centred; 2 mm cradle wall, top at Z8. Cradle starts Z3, overlapping the floor by 1 mm; no floating or merely touching solids. Clearance around the input envelope is 1 mm per side.
-- Opposing connector sockets centred Y25, bottom Z(H-20), open at top. Left-wall head recess X3…7, Y20…30; throat X0…3, Y23…27. Right wall mirrored. Closed solid floor below each recess. Two adjacent walls separated by exactly 2 mm.
-- Key local origin at right outer wall of left box, Y25, Z(H-20). Left T head X(-7+c)…(-3-c), right head X(5+c)…(9-c), each Y(-5+c)…(5-c), height19.6. Bridge neck X(-3-c)…(5+c), Y(-2+c)…(2-c). CSG-unioned with overlapping ends. At default c=.30: 3.4×9.4 heads, 3.4 neck width; nominal per-face clearance .30. Head is wider than 4 mm throat by ≥4.8 across allowed clearances; there is real pull-apart interference. Lid closes withdrawal path; slots/keys are not decorative.
-- Lid top plate W×D×3 at ZH. Underside tongue X(7+c)…(W-7-c), Y0…(D-7-c), Z(H-4)…(H+.2); joined to plate with .2 overlap. Body groove X7…W-7, Y0…D-7, Z(H-4-c)…(H+c). Slide from Y0 until aligned; solid back wall stops deeper insertion. Sidewall roof shoulders capture the tongue against lifting. Print lid **top face down**, not assembled orientation.
-- Lock hole centre XW/2, Y5.5, square side(3+2c); body hole down to H-10. Pin shaft 3×3×12, head6×6×2 with .2 union overlap. Seated shaft bottom H-8.8, head bottom H+3, top H+5. Pin blocks lid sliding, is manually removable and is **not a snap fit**.
-- c adjustable .15–.60 per mating face; default .30. This is a geometric clearance, not a promise that every printer/material will fit.
+No separate pins, keys, bridges or hardware. BOM contains only `body` and `lid`. ZIP includes unique STL files with quantities, BOM CSV/JSON, settings and assembly instructions.
 
-## Assembly and printing
+## Mechanical geometry and assembly
 
-1. Print a small body/key/lid/pin calibration set before batch printing. Suggested starting point: PETG, 0.4 mm nozzle, 0.2 layers, 5 perimeters, 30% infill. Bodies base-down, lids top-down, keys upright, pins head-down. STL coordinates are rebased to minimum XYZ zero, **not auto-oriented**. Turn lids/pins in your slicer. Side grooves and socket roofs may need removable supports; inspect sliced overhangs carefully.
-2. Arrange numbered boxes front-aligned in the row shown, 2 mm gap. Insert each bridge from the top until seated.
-3. Set model base in cradle. Slide lids in from front, flush with back; insert headed lock pins vertically through the front lid holes.
-4. Carry upright, supporting every box bottom. To disassemble: remove lock pins, slide lids forwards, lift bridge keys.
-5. FDM anisotropy, stress concentrations, repeated wear, dimensional drift, impact and load are unvalidated. PLA creeps in heat; PETG also creeps. Do not leave in a hot car. Never assume preview/export validation establishes physical strength.
+Coordinates X left→right, Y front→back, Z up. Arrange units front-aligned at next origin = previous X + previous shell W + 5.
+
+Dovetail male begins at shell right wall and extends 4 mm; profile Y9…15 at neck and Y6…18 at head. Female housing extends 5 mm left and is 18 mm deep Y3…21, 18 mm tall. Female floor datum Z3, male bottom Z3+c, top Z17. Channel is offset outward by adjustable per-face c=.15… .60. Trapezoid head mechanically captures lateral separation; floor blocks downward travel. Interface independent of body height. **Lift the LEFT/male body above the RIGHT/female body's channel and lower vertically**, before fitting lids. Channel is open above Z18. No vertical connector lock: do not lift the row by an end unit.
+
+Lid is **lift-on**, not the old sliding design. Plate sits H+.3 to H+2.7. Front/back skirts extend down 14 mm, each up to 32 mm wide and 1.6 mm thick, joined to roof with overlap. Inward 0.8 mm hooks engage shallow outer-wall pockets at H−9.5; there is actual vertical capture and no final-pose collision. Inner lips locate laterally; they are NOT capture rails. Spread both broad skirts outward about 1.5 mm with thumbs while lowering/lifting and release only when seated. There is no lead-in ramp, so **do not force an unflexed lid down** or claim automatic snap insertion.
+
+Print bodies base-down; lids top-face down (rotate 180° in slicer; exports rebase coordinates only). Suggested starting point PETG, 0.4 nozzle, 0.2 layers. Inspect overhangs/supports at sockets and hooks, calibrate one pair before batching. Physical thumb force, elastic strain, print fit, fatigue, layer strength and creep are **unvalidated**. CAD rigid-component paths do not establish elastic performance.
+
+## Safety
+
+Prototype, not load-rated or physically print-tested. Carry upright with **two hands supporting ALL bases**. No handle; never lift by end unit, lid or connector. Not inversion/shock-safe. Low ribs and optional pockets do not clamp or prevent model bounce. Fragile miniatures require separate physical restraint validation. Avoid hot cars.
 
 ## Verification
 
-`npm test` parses the **actual exported ZIP/STLs**, checks directed mesh edges occur twice with opposite winding, finite coordinates, positive signed volume, exact binary lengths, bounds, quantities, min/max/mixed cases, and input rejection. CSG intersection tests prove all assembled parts are mutually nonintersecting at clearance .15/.30/.60 and that lateral key pull-out, upward key removal under lid, and lid sliding with pin inserted encounter real geometry. This is collision/topology verification, **not structural analysis or physical manufacturing certification**.
+`npm test` parses actual exported binary STLs, audits opposite directed edge pairs, finite coordinates, positive volume and ≤250 bounds. It checks minimum/maximum/multi-model cases, exact partial quantities, independent heights, complete envelope clearance from walls/ribs/lids, final assembly collisions, positive lateral capture, integral floor stop, sampled vertical insertion and released-lid paths at .15/.30/.60 clearance. Topology is not structural certification.
 
-`npm run test:browser` launches real headless Chrome, exercises top/exploded/ghost controls, add/remove, persistence, oversize rejection, downloads the real ZIP, audits all unique STL files, checks quantities and mobile overflow, and checks no page exceptions. Screenshots are evidence artifacts, not a claimed physical fit test.
+`npm run test:browser` exercises real Chrome UI, per-unit settings, multiple ghosts, persistence, add/remove, rejection, actual ZIP download and mesh audit, zero small-part BOM, desktop/mobile layout and page errors. Artifacts saved in ignored `test-results/`.
 
-## Provenance
+## Source
 
-See `docs/gemini-design.txt` for the actual consulted Gemini web transcript. Gemini supplied the common-grid idea and Three.js + STL/ZIP architecture. Its response stopped at the pitch heading and did not supply detailed mechanisms or dimensions. **All mechanical geometry, formulas and safety decisions here are independently engineered**, not attributed to Gemini. The app makes no claim of Gemini mechanical verification.
+`src/mechanics.mjs`: planning and mechanics. `src/engine.mjs`: mesh/ZIP export. `src/app.mjs`: editor/preview. `tests/`: CAD/topology/browser checks. `scripts/build.mjs`: esbuild and local server.
 
-## Source map
-
-- `src/engine.mjs`: pure planning, JSCAD mechanics, STL, ZIP and instructions
-- `src/app.mjs`: editor, preview, local state, download
-- `src/style.css`, `index.html`: responsive UI
-- `tests/`: engine/topology/engagement tests and actual Chrome download integration
-- `scripts/build.mjs`: esbuild local bundle/static dev server
+Design provenance: `docs/gemini-design.txt` records earlier consultation about general architecture. Current mechanical dimensions are independently engineered; no Gemini mechanical validation is claimed.
